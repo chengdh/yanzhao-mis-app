@@ -4,6 +4,6 @@ services:
     build: .
     command: "npm run serve"
     ports:
-      - "8084:8084"
+      - "9020:9020"
     volumes:
        - .:/app

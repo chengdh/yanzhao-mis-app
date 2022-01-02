@@ -11,7 +11,15 @@ export const constantRouterMap = [
       title: '首页',
       keepAlive: false
     },
+
     children: [
+      {
+        path: '/login',
+        name: 'login',
+        component: () => import('@/views/login/login'),
+        meta: { title: '登录', keepAlive: false }
+      },
+ 
       {
         path: '/home',
         name: 'Home',
