@@ -7,13 +7,11 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import VueApollo from 'vue-apollo'
-import ApolloClient from 'apollo-boost'
-import gql from 'graphql-tag'
 
 // 设置 js中可以访问 $cdn
-import { $cdn, baseApi } from '@/config'
-Vue.prototype.$cdn = $cdn
+import { $cdn } from '@/config'
+import VueApollo from 'vue-apollo'
+import apolloClient from '@/apollo_client'
 
 // 全局引入按需引入UI库 vant
 import '@/plugins/vant'
@@ -24,13 +22,13 @@ import 'lib-flexible/flexible.js'
 
 // filters
 import './filters'
+
 // create a provider
 const apolloProvider = new VueApollo({
-  defaultClient: new ApolloClient({
-    uri: baseApi
-  })
+  defaultClient: apolloClient
 })
-Vue.use(VueApollo, gql)
+Vue.use(VueApollo)
+Vue.prototype.$cdn = $cdn
 Vue.config.productionTip = false
 
 new Vue({

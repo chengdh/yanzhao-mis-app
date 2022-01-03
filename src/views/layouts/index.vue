@@ -20,14 +20,22 @@ export default {
     return {
       tabbars: [
         {
-          title: '首页',
+          title: '消息',
+          to: {
+            name: 'WorkflowOperates'
+          },
+          icon: 'chat-o'
+        },
+        {
+          title: '工作台',
           to: {
             name: 'Home'
           },
           icon: 'home-o'
         },
+
         {
-          title: '关于我',
+          title: '我的',
           to: {
             name: 'About'
           },

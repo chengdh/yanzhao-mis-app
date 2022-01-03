@@ -20,6 +20,11 @@ const createRouter = () =>
   })
 
 const router = createRouter()
+router.beforeEach((to, from, next) => {
+  let isAuthenticated = localStorage.getItem("JWT_TOKEN")
+  if (to.name !== 'Login' && !isAuthenticated) next({ name: 'Login' })
+  else next()
+})
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {

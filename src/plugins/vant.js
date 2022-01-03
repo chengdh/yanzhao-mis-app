@@ -1,9 +1,32 @@
 // 按需全局引入 vant组件
 import Vue from 'vue'
-import { Button,Row, List, Cell, CellGroup,Field, Tabbar, TabbarItem } from 'vant'
+import {
+  NavBar,
+  Button,
+  Row,
+  List,
+  Cell,
+  CellGroup,
+  Form,
+  Field,
+  Tabbar,
+  TabbarItem,
+  Grid,
+  GridItem,
+  Image as VanImage,
+  Toast
+} from 'vant'
 Vue.use(Button)
-Vue.use(Cell)
-Vue.use(CellGroup)
-Vue.use(Row).use(Field)
-Vue.use(List)
-Vue.use(Tabbar).use(TabbarItem)
+  .use(NavBar)
+  .use(Cell)
+  .use(CellGroup)
+  .use(List)
+  .use(Tabbar)
+  .use(TabbarItem)
+  .use(Row)
+  .use(Field)
+  .use(VanImage)
+  .use(Form)
+  .use(Toast)
+  .use(Grid)
+  .use(GridItem)

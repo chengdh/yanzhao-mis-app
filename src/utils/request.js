@@ -20,8 +20,9 @@ service.interceptors.request.use(
         forbidClick: true
       })
     }
-    if (store.getters.token) {
-      config.headers['X-Token'] = ''
+    let jwt_token = localStorage.getItem("JWT_TOKEN")
+    if (jwt_token) {
+      config.headers['Authorization'] = 'Bearer ' + jwt_token
     }
     return config
   },
@@ -54,5 +55,4 @@ service.interceptors.response.use(
     return Promise.reject(error)
   }
 )
-
 export default service

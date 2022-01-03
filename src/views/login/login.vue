@@ -1,139 +1,88 @@
 <template>
   <div class="login-container">
-    <img src="@/assets/logo.png" alt="" class="logo" />
-
-    <van-cell-group>
+    <div class="logo-wrapper">
+      <van-image width="2rem" height="1.2rem" :src="require('@/assets/images/logo_yanzhao.png')" />
+    </div>
+    <h2 class="title-wrapper">
+      <span>综合办公平台</span>
+      <span>登录</span>
+    </h2>
+    <van-form @submit="onSubmit">
       <van-field
         v-model="username"
-        placeholder="请输入账号"
-        label-align="left"
-        label="账号"
-        clearable
-        required
-      ></van-field>
+        name="帐号"
+        label="帐号"
+        left-icon="user-o"
+        placeholder="请输入帐号"
+        :rules="[{ required: true, message: '请输入帐号' }]"
+      />
       <van-field
         v-model="password"
-        placeholder="请输入密码"
-        label-align="left"
+        type="password"
+        name="密码"
         label="密码"
-        clearable
-        required
-        type="password"
-      ></van-field>
-      <van-field
-        v-show="!isLogin"
-        del="repassword"
-        placeholder="请再次输入密码"
-        label-align="left"
-        label="重复密码"
-        clearable
-        required
-        type="password"
-      ></van-field>
-    </van-cell-group>
-
-    <van-row class="box">
-      <van-button size="small" @click="handleRegister">
-        {{ isLogin ? '注册' : '已有账号' }}
-      </van-button>
-      <van-button type="primary" size="small" class="login-btn" @click="handleLogin">
-        {{ isLogin ? '登录' : '注册并且登录' }}
-      </van-button>
-    </van-row>
+        placeholder="请输入密码"
+        left-icon="eye-o"
+        :rules="[{ required: true, message: '请填写密码' }]"
+      />
+      <div style="margin: 16px; margin-top: 40px">
+        <van-button round block type="info" native-type="submit">登录</van-button>
+      </div>
+    </van-form>
   </div>
 </template>
 <script>
+import HasuraAuth from '@/graphql/queries/hasura_auth'
+import { Toast } from 'vant'
 export default {
   data() {
     return {
       username: '',
-      password: '',
-      repassword: '',
-      isLogin: true
+      password: ''
     }
   },
   methods: {
-    handleRegister() {
-      this.isLogin = !this.isLogin
-    },
-    showLoginTip() {
-      const toast = this.$toast.loading({
-        duration: 0,
-        forbidClick: false,
-        loadingType: 'spinner',
-        message: '登录中......'
-      })
-    },
-    login() {
-      this.$http
-        .login({
-          username: this.username,
-          password: this.password
-        })
-        .then(response => {
-          console.log('登录成功返回', response)
-          console.log('返回code', response.code)
-          if (response.code == 1) {
-            this.$router.push({
-              path: '/home'
-            })
-            // this.$store.dispatch('setUser', )
+    onSubmit() {
+      this.$apollo
+        .query({
+          query: HasuraAuth,
+          variables: {
+            username: this.username,
+            cleartext_password: this.password
           }
         })
-        .catch(err => {
-          console.error('登录发生错误', err)
+        .then(({data, loading, networkStatus, stale}) => {
+          console.log(data)
+          if (data.hasura_auth.length == 0) {
+            Toast.fail('登录失败')
+            localStorage.removeItem('JWT_TOKEN')
+          } else {
+            Toast.success('登录成功')
+            localStorage.setItem('JWT_TOKEN', data.hasura_auth[0].jwt_token)
+            this.$router.push({ name: 'Home' })
+          }
         })
-    },
-    handleLogin() {
-      if (!this.username || !this.password) {
-        this.$toast.fail('用户名或是密码不能为空')
-        return
-      }
-      if (this.isLogin) {
-        this.showLoginTip()
-        this.login()
-      } else {
-        console.log('注册用户')
-        if (this.password != this.repassword) {
-          this.$toast.fail('两次输入密码不一致')
-          return
-        }
-        this.$http
-          .register({
-            username: this.username,
-            password: this.password
-          })
-          .then(res => {
-            console.log('注册成功返回', res.data)
-            this.$toast.clear()
-            // this.$store.dispath('setUser', res.data)
-            this.$router.push({
-              path: '/home'
-            })
-          })
-          .catch(err => {
-            this.$toast.fail(err)
-          })
-      }
+        .catch(error => {
+          console.error(error)
+          Toast.fail('登录失败')
+          localStorage.removeItem('JWT_TOKEN')
+        })
     }
   }
 }
 </script>
 <style lang="scss" scoped>
 .login-container {
+  margin-top: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  .logo {
-    width: 300px;
-    margin: 100px 0 30px;
-  }
-  .box {
-    margin-top: 30px;
-  }
-  .login-btn {
-    margin-left: 20px;
-  }
+}
+.logo-wrapper {
+  padding: 10px;
+}
+.title-wrapper {
+  margin-bottom: 40px;
 }
 </style>
