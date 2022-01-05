@@ -24,7 +24,7 @@ export default {
               name
               id
               note
-              form_info_designs {
+              form_info_design {
                 form_json
                 id
               }

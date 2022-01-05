@@ -29,9 +29,10 @@ export const constantRouterMap = [
         meta: { title: '消息', keepAlive: false }
       },
       {
-        path: '/form_info',
+        path: '/form_info/:formInfoId',
         name: 'FormInfo',
         component: () => import('@/components/FormInfo'),
+        props: true,
         meta: { title: '表单', keepAlive: false }
       },
 
