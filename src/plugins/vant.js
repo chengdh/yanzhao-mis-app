@@ -14,7 +14,12 @@ import {
   Grid,
   GridItem,
   Image as VanImage,
-  Toast
+  Uploader,
+  Toast,
+  Col,
+  Step,
+  Steps,
+  Icon
 } from 'vant'
 Vue.use(Button)
   .use(NavBar)
@@ -24,9 +29,14 @@ Vue.use(Button)
   .use(Tabbar)
   .use(TabbarItem)
   .use(Row)
+  .use(Col)
   .use(Field)
   .use(VanImage)
   .use(Form)
   .use(Toast)
   .use(Grid)
   .use(GridItem)
+  .use(Uploader)
+  .use(Step)
+  .use(Steps)
+  .use(Icon)
