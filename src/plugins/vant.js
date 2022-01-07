@@ -19,7 +19,9 @@ import {
   Col,
   Step,
   Steps,
-  Icon
+  Icon,
+  TreeSelect,
+  Popup,
 } from 'vant'
 Vue.use(Button)
   .use(NavBar)
@@ -40,3 +42,5 @@ Vue.use(Button)
   .use(Step)
   .use(Steps)
   .use(Icon)
+  .use(TreeSelect)
+  .use(Popup)

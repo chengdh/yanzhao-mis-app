@@ -6,6 +6,9 @@ export default gql`
         form_json
       }
       workflow_infos {
+        id 
+        name
+        note
         workflow_info_nodes(where: { node_type: { _nin: ["start", "end", "condition"] } }) {
           id
           name
