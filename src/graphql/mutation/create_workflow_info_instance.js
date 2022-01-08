@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
 export default gql`
   mutation CreateWorkflowInfoInstance($object: yws_workflow_info_instances_insert_input = {}) {
-    insert_yws_workflow_info_instances_one(object: $object) {
+    workflow_info_instance: insert_yws_workflow_info_instances_one(object: $object) {
       id
       name
       note

@@ -22,7 +22,7 @@ export default {
         {
           title: '消息',
           to: {
-            name: 'WorkflowOperates'
+            name: 'MyOperates'
           },
           icon: 'chat-o'
         },

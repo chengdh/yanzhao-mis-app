@@ -2,7 +2,13 @@
   <div>
     <van-cell-group inset :key="cat.id" v-for="cat in formCategories" :title="cat.name">
       <van-grid>
-        <van-grid-item v-for="formInfo in cat.form_infos" :key="formInfo.id" icon="photo-o" :text="formInfo.name" />
+        <van-grid-item
+          v-for="formInfo in cat.form_infos"
+          :key="formInfo.id"
+          @click="startFormInfo(formInfo)"
+          icon="photo-o"
+          :text="formInfo.name"
+        />
       </van-grid>
     </van-cell-group>
   </div>
@@ -44,6 +50,9 @@ export default {
   methods: {
     moment: function () {
       return moment()
+    },
+    startFormInfo(formInfo) {
+      this.$router.push({ name: 'StartFormInfo', query: { formInfoId: formInfo.id } })
     }
   }
 }

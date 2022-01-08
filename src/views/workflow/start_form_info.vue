@@ -1,9 +1,10 @@
 <template>
   <div style="display: flex; flex-direction: column">
-    <van-cell-group inset id="form_wrapper">
+    <van-nav-bar :title="title" left-text="返回" left-arrow @click-left="() => this.$router.back(-1)" />
+    <van-cell-group inset id="form_wrapper" style="margin-top: 10px; padding: 10px">
       <div id="fb_editor" ref="fb_editor"></div>
     </van-cell-group>
-    <van-cell-group inset id="user_list">
+    <van-cell-group inset id="user_list" style="margin-top: 10px">
       <van-steps direction="vertical" v-if="formInfo">
         <van-step v-for="node in formInfo.workflow_infos[0].workflow_info_nodes" :key="node.id">
           <van-cell center :title="nodeTitle(node)" :label="nodeDescribe(node)" :value="nodeAuditUsersString(node)">
@@ -22,7 +23,7 @@
         </van-step>
       </van-steps>
     </van-cell-group>
-    <van-cell-group inset id="footer">
+    <van-cell-group inset id="footer" style="margin-top: 10px">
       <van-button type="primary" @click="onCreate" size="small" block round>提交</van-button>
     </van-cell-group>
     <van-popup v-model="showSelectUser" @closed="onPopupClosed" closeable close-icon="close" position="bottom">
@@ -51,12 +52,15 @@ import QueryFormInfoByPk from '@/graphql/queries/query_form_info_by_pk'
 import QueryOrgs from '@/graphql/queries/query_orgs'
 import QueryUsers from '@/graphql/queries/query_users'
 import CreateWorkflowInfoInstance from '@/graphql/mutation/create_workflow_info_instance'
+import gql from 'graphql-tag'
+import { Toast, Notify } from 'vant'
+import moment from 'moment'
 
 export default {
   name: 'FormInfo',
   props: {
     formInfoId: {
-      type: String,
+      type: String | Number,
       required: true
     }
   },
@@ -87,7 +91,8 @@ export default {
       showSelectUser: false,
       activeIndex: 1,
       activeNodeId: null,
-      activeIds: []
+      activeIds: [],
+      formRenderInstance: null
     }
   },
   methods: {
@@ -178,6 +183,15 @@ export default {
       }
     },
     onCreate() {
+      if (!this.validateRequiredUser()) {
+        Toast.fail('请设置用户')
+        return
+      }
+      if (!this.validateForm()) {
+        Toast.fail('请输入非空字段')
+        return
+      }
+
       let o = this.getWorkflowInfoInstanceObject()
       this.$apollo
         .mutate({
@@ -187,7 +201,26 @@ export default {
           }
         })
         .then(data => {
-          console.log(data)
+          this.$apollo
+            .mutate({
+              mutation: gql`
+                mutation buildNextNodeInstance($id: Int!, $model: String!, $method: String!) {
+                  call_kw(arg: { id: $id, model: $model, method: $method }) {
+                    result
+                  }
+                }
+              `,
+              variables: {
+                id: data.data.workflow_info_instance.id,
+                model: 'workflow_info_instance',
+                method: 'build_next_node_instance'
+              }
+            })
+            .then(data => {
+              console.log(data)
+              Notify({ type: 'success', message: `提交${this.title}成功!` })
+              this.$router.push({ name: 'Home' })
+            })
         })
     },
     getWorkflowInfoInstanceObject: function () {
@@ -206,12 +239,40 @@ export default {
         workflow_info_id: wfInfo.id,
         name: wfInfo.name,
         note: wfInfo.note,
-        form_data_json: this.formInfo.form_info_design.form_json,
+        form_data_json: JSON.stringify(this.formRenderInstance.userData),
+        starter_id: JSON.parse(localStorage.getItem('CURRENT_USER')).id,
+        start_datetime: moment(),
         workflow_info_instance_users: {
           data: wfiUsersData
         }
       }
       return object
+    },
+
+    //表单提交时验证
+    validateForm() {
+      let validated = true
+      let userData = this.formRenderInstance.userData
+      for (let d of userData) {
+        if (d.required && d.userData[0] == '') {
+          return false
+        }
+      }
+      return validated
+    },
+
+    //验证是否设置了审批用户
+    validateRequiredUser() {
+      let validated = true
+      let ids = this.requireNodeIds
+      //验证是否设置了自选用户
+      for (let nId of ids) {
+        let userIds = this.selectedUserIds[nId]
+        if (!userIds) {
+          return false
+        }
+      }
+      return validated
     }
   },
   watch: {
@@ -221,11 +282,32 @@ export default {
           formData: this.formInfo.form_info_design.form_json,
           dataType: 'json'
         }
-        $(this.$refs.fb_editor).formRender(formRenderOpts)
+        this.formRenderInstance = $(this.$refs.fb_editor).formRender(formRenderOpts)
       }
     }
   },
-  computed: {},
+  computed: {
+    title: function () {
+      return (this.formInfo && this.formInfo.name) || ''
+    },
+    //发起表单时必须手动选择审批人的节点
+    requireNodes: function () {
+      let ret = []
+      if (this.formInfo) {
+        ret = this.formInfo.workflow_infos[0].workflow_info_nodes.filter(
+          n => n.audit_type == 'beginner_select' || n.audit_type == 'copy_to'
+        )
+      }
+      return ret
+    },
+
+    requireNodeIds: function () {
+      let ret = []
+      let nodes = this.requireNodes
+      ret = nodes.map(n => n.id)
+      return ret
+    }
+  },
   created() {},
   mounted() {}
 }

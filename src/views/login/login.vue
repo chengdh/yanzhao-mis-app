@@ -51,14 +51,17 @@ export default {
             cleartext_password: this.password
           }
         })
-        .then(({data, loading, networkStatus, stale}) => {
+        .then(({ data, loading, networkStatus, stale }) => {
           console.log(data)
           if (data.hasura_auth.length == 0) {
             Toast.fail('登录失败')
             localStorage.removeItem('JWT_TOKEN')
+            localStorage.removeItem('CURRENT_USER')
           } else {
             Toast.success('登录成功')
+            let { id, username } = data.hasura_auth[0]
             localStorage.setItem('JWT_TOKEN', data.hasura_auth[0].jwt_token)
+            localStorage.setItem('CURRENT_USER', JSON.stringify({ id, username }))
             this.$router.push({ name: 'Home' })
           }
         })
@@ -66,6 +69,7 @@ export default {
           console.error(error)
           Toast.fail('登录失败')
           localStorage.removeItem('JWT_TOKEN')
+          localStorage.removeItem('CURRENT_USER')
         })
     }
   }
