@@ -1,7 +1,7 @@
 <template>
   <div>
     <van-cell-group inset>
-      <van-search v-model="search_kw" placeholder="请输入搜索关键词" />
+      <van-search shape="round" v-model="search_kw" placeholder="请输入搜索关键词" />
     </van-cell-group>
 
     <van-cell-group inset :key="operate.id" v-for="operate in operateList" @click="onClick">

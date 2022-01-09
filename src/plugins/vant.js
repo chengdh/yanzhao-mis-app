@@ -24,6 +24,7 @@ import {
   Popup,
   Notify,
   Search,
+  Divider,
 } from 'vant'
 Vue.use(Button)
   .use(NavBar)
@@ -48,3 +49,4 @@ Vue.use(Button)
   .use(Popup)
   .use(Notify)
   .use(Search)
+  .use(Divider)

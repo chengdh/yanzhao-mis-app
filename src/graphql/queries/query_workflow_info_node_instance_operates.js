@@ -4,7 +4,11 @@ import gql from 'graphql-tag'
 export const QuerMyOperates = gql`
   query myOperates($user_id: bigint!, $states: [String!]) {
     myOperates: yws_workflow_info_node_instance_operates(
-      where: { state: { _in: $states }, user_id: { _eq: $user_id } }
+      where: {
+        state: { _in: $states }
+        user_id: { _eq: $user_id }
+        workflow_info_node_instance: { workflow_info_node: { node_type: { _nin: ["start", "end", "condition"] } } }
+      }
     ) {
       audit_date
       audit_note
@@ -15,6 +19,13 @@ export const QuerMyOperates = gql`
       user_id
       workflow_info_node_instance {
         name
+        workflow_info_node {
+          id
+          name
+          node_type
+          audit_type
+          audit_mode
+        }
         workflow_info_instance {
           id
           name

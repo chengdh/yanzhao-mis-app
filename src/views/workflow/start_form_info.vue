@@ -57,7 +57,7 @@ import { Toast, Notify } from 'vant'
 import moment from 'moment'
 
 export default {
-  name: 'FormInfo',
+  name: 'StartFormInfo',
   props: {
     formInfoId: {
       type: String | Number,

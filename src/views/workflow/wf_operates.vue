@@ -2,21 +2,24 @@
   <div>
     <van-nav-bar :title="title" left-text="返回" left-arrow @click-left="() => this.$router.back(-1)" />
     <van-cell-group inset style="display: flex; align-items: center">
-      <van-search v-model="search_kw" placeholder="请输入搜索关键词" />
+      <van-search v-model="search_kw" shape="round" placeholder="请输入搜索关键词" />
       <van-button round size="small">
         <van-icon name="filter-o" />
         筛选
       </van-button>
     </van-cell-group>
 
-    <van-cell-group inset :key="operate.id" v-for="operate in operates" @click="onClick">
+    <van-cell-group inset :key="operate.id" v-for="operate in operates">
       <van-cell
         :title="operateTitle(operate)"
         :value="operate.start_datetime | moment('from')"
+        @click="evt => onClick(operate)"
         is-link
       >
         <template #label>
-          <div class="van-ellipsis" :key="i" v-for="(f,i) in formatJson(operate.form_data_json)">{{f.label}}:{{f.val}}</div>
+          <div class="van-ellipsis" :key="i" v-for="(f, i) in formatJson(operate.form_data_json)">
+            {{ f.label }}:{{ f.val }}
+          </div>
         </template>
       </van-cell>
     </van-cell-group>
@@ -71,8 +74,12 @@ export default {
   },
   mounted() {},
   methods: {
-    onClick() {
-      this.$router.push({ name: 'FormInfo' })
+    onClick(wfi) {
+      if (this.queryType == 'myWaitting') {
+        this.$router.push({ name: 'AuditFormInfo', query: { workflowInfoInstanceId: wfi.id } })
+      } else {
+        this.$router.push({ name: 'ShowFormInfo', query: { workflowInfoInstanceId: wfi.id } })
+      }
     },
     operateTitle(operate) {
       return `${operate.starter.username}提交的${operate.workflow_info.name}`
