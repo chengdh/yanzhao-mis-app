@@ -4,7 +4,7 @@
     <van-cell-group inset id="form_wrapper" style="margin-top: 10px; padding: 10px">
       <div id="fb_editor" ref="fb_editor"></div>
     </van-cell-group>
-    <van-cell-group inset id="user_list" style="margin-top: 10px">
+    <van-cell-group inset title="流程" id="user_list" style="margin-top: 10px">
       <van-steps direction="vertical" v-if="formInfo">
         <van-step v-for="node in formInfo.workflow_infos[0].workflow_info_nodes" :key="node.id">
           <van-cell center :title="nodeTitle(node)" :label="nodeDescribe(node)" :value="nodeAuditUsersString(node)">
@@ -237,7 +237,7 @@ export default {
       }
       let object = {
         workflow_info_id: wfInfo.id,
-        name: wfInfo.name,
+        name: this.formInfo.name,
         note: wfInfo.note,
         form_data_json: JSON.stringify(this.formRenderInstance.userData),
         starter_id: JSON.parse(localStorage.getItem('CURRENT_USER')).id,

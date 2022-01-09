@@ -1,5 +1,28 @@
 <template>
   <div>
+    <van-cell-group inset style="margin-top: 10px">
+      <van-grid>
+        <van-grid-item
+          icon="underway-o"
+          text="待处理"
+          :to="{ name: 'GroupOperates', query: { queryType: 'myWaitting' } }"
+        />
+
+        <van-grid-item icon="success" text="已处理" :to="{ name: 'GroupOperates', query: { queryType: 'myDone' } }" />
+
+        <van-grid-item
+          icon="records"
+          text="已发起"
+          :to="{ name: 'GroupOperates', query: { queryType: 'mySubmitted' } }"
+        />
+
+        <van-grid-item
+          icon="envelop-o"
+          text="我收到的"
+          :to="{ name: 'GroupOperates', query: { queryType: 'myReceived' } }"
+        />
+      </van-grid>
+    </van-cell-group>
     <van-cell-group inset :key="cat.id" v-for="cat in formCategories" :title="cat.name">
       <van-grid>
         <van-grid-item
@@ -15,7 +38,6 @@
 </template>
 <script>
 import gql from 'graphql-tag'
-import moment from 'moment'
 export default {
   name: 'OperateList',
   components: {},
@@ -48,9 +70,6 @@ export default {
   created() {},
   mounted() {},
   methods: {
-    moment: function () {
-      return moment()
-    },
     startFormInfo(formInfo) {
       this.$router.push({ name: 'StartFormInfo', query: { formInfoId: formInfo.id } })
     }

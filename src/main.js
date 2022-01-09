@@ -28,6 +28,14 @@ const apolloProvider = new VueApollo({
   defaultClient: apolloClient
 })
 Vue.use(VueApollo)
+
+const moment = require('moment')
+require('moment/locale/zh-cn')
+
+Vue.use(require('vue-moment'), {
+    moment
+})
+
 Vue.prototype.$cdn = $cdn
 Vue.config.productionTip = false
 

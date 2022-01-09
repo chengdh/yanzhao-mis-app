@@ -12,6 +12,8 @@ export const constantRouterMap = [
       keepAlive: false
     }
   },
+
+  //发起工作流
   {
     path: '/workflow/start_form_info',
     name: 'StartFormInfo',
@@ -19,7 +21,14 @@ export const constantRouterMap = [
     props: route => ({ formInfoId: route.query.formInfoId }),
     meta: { title: '提交表单', keepAlive: false }
   },
-
+  //待处理/已处理/已发起/我收到的
+{
+    path: '/workflow/group_operates',
+    name: 'GroupOperates',
+    component: () => import('@/views/workflow/wf_operates'),
+    props: route => ({ queryType: route.query.queryType}),
+    meta: { title: '与我有关', keepAlive: false }
+  },
   {
     path: '/',
     component: () => import('@/views/layouts/index'),

@@ -23,6 +23,7 @@ import {
   TreeSelect,
   Popup,
   Notify,
+  Search,
 } from 'vant'
 Vue.use(Button)
   .use(NavBar)
@@ -46,3 +47,4 @@ Vue.use(Button)
   .use(TreeSelect)
   .use(Popup)
   .use(Notify)
+  .use(Search)
