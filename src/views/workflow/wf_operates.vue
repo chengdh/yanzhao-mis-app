@@ -1,7 +1,7 @@
 <template>
   <div>
     <van-nav-bar :title="title" left-text="返回" left-arrow @click-left="() => this.$router.back(-1)" />
-    <van-cell-group inset style="display: flex;align-items: center;">
+    <van-cell-group inset style="display: flex; align-items: center">
       <van-search v-model="search_kw" placeholder="请输入搜索关键词" />
       <van-button round size="small">
         <van-icon name="filter-o" />
@@ -10,12 +10,20 @@
     </van-cell-group>
 
     <van-cell-group inset :key="operate.id" v-for="operate in operates" @click="onClick">
-      <van-cell :title="operateTitle(operate)" :value="operate.start_datetime | moment('from')" label="for" is-link />
+      <van-cell
+        :title="operateTitle(operate)"
+        :value="operate.start_datetime | moment('from')"
+        is-link
+      >
+        <template #label>
+          <div class="van-ellipsis" :key="i" v-for="(f,i) in formatJson(operate.form_data_json)">{{f.label}}:{{f.val}}</div>
+        </template>
+      </van-cell>
     </van-cell-group>
   </div>
 </template>
 <script>
-import gql from 'graphql-tag'
+import { formJsonFieldsFormat } from '@/utils/form_builder_util'
 import {
   QuerMyOperates,
   QuerMySubmitted,
@@ -68,6 +76,10 @@ export default {
     },
     operateTitle(operate) {
       return `${operate.starter.username}提交的${operate.workflow_info.name}`
+    },
+    formatJson(formJson) {
+      let jsonArray = formJsonFieldsFormat(formJson)
+      return jsonArray
     },
     doQuery() {
       switch (this.queryType) {

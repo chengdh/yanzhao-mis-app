@@ -48,10 +48,10 @@ export const QuerMySubmitted = gql`
         id
         username
       }
-    }
-    workflow_info {
-      id
-      name
+      workflow_info {
+        id
+        name
+      }
     }
   }
 `
