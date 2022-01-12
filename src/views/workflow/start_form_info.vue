@@ -23,7 +23,7 @@
         </van-step>
       </van-steps>
     </van-cell-group>
-    <van-cell-group inset id="footer" style="margin-top: 10px">
+    <van-cell-group inset id="footer" style="margin-top: 10px;padding: 10px;">
       <van-button type="primary" @click="onCreate" size="small" block round>提交</van-button>
     </van-cell-group>
     <van-popup v-model="showSelectUser" @closed="onPopupClosed" closeable close-icon="close" position="bottom">

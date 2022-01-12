@@ -8,7 +8,6 @@
         筛选
       </van-button>
     </van-cell-group>
-
     <van-cell-group inset :key="operate.id" v-for="operate in operates">
       <van-cell
         :title="operateTitle(operate)"
@@ -44,7 +43,13 @@ export default {
       //待处理
       //已处理
       operates: [],
-      search_kw: ''
+      search_kw: '',
+      finished: true,
+      loading: false,
+      refreshing: false,
+      //分页
+      page: 1,
+      rows: 20
     }
   },
   computed: {
