@@ -24,14 +24,17 @@
       </van-grid>
     </van-cell-group>
     <van-cell-group inset :key="cat.id" v-for="cat in formCategories" :title="cat.name">
-      <van-grid>
+      <van-grid column-num="3">
         <van-grid-item
           v-for="formInfo in cat.form_infos"
           :key="formInfo.id"
           @click="startFormInfo(formInfo)"
           icon="photo-o"
-          :text="formInfo.name"
-        />
+        >
+          <template #text>
+            <div style="width: 60px;" class="van-ellipsis">{{ formInfo.name }}</div>
+          </template>
+        </van-grid-item>
       </van-grid>
     </van-cell-group>
   </div>
