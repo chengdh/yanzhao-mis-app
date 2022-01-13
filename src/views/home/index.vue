@@ -1,6 +1,7 @@
 <template>
   <div>
-    <van-cell-group inset style="margin-top: 10px">
+    <van-nav-bar title="工作台" :fixed=true />
+    <van-cell-group inset style="margin-top:6em">
       <van-grid>
         <van-grid-item
           icon="underway-o"

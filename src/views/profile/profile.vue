@@ -1,7 +1,7 @@
 <template>
   <div id="mine">
     <van-nav-bar title="我的" :border="false" />
-    <van-cell-group style="margin-top: 0.4rem">
+    <van-cell-group inset style="margin-top: 0.4rem">
       <van-cell style="" label-class="labelClass" is-link center>
         <template slot="title">
           <div class="personMsg" v-if="userInfo.token">
@@ -13,7 +13,7 @@
       </van-cell>
     </van-cell-group>
 
-    <van-cell-group style="margin-top: 0.4rem">
+    <van-cell-group inset style="margin-top: 0.4rem">
       <van-cell title="退出登录" icon="comment-circle" is-link @click="onLogout" />
     </van-cell-group>
   </div>

@@ -8,20 +8,30 @@
         筛选
       </van-button>
     </van-cell-group>
-    <van-cell-group inset :key="operate.id" v-for="operate in operates">
-      <van-cell
-        :title="operateTitle(operate)"
-        :value="operate.start_datetime | moment('from')"
-        @click="evt => onClick(operate)"
-        is-link
+    <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+      <van-list
+        v-model="loading"
+        :immediate-check="false"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="onLoad"
       >
-        <template #label>
-          <div class="van-ellipsis" :key="i" v-for="(f, i) in formatJson(operate.form_data_json)">
-            {{ f.label }}:{{ f.val }}
-          </div>
-        </template>
-      </van-cell>
-    </van-cell-group>
+        <van-cell-group inset :key="operate.id" v-for="operate in operates">
+          <van-cell
+            :title="operateTitle(operate)"
+            :value="operate.start_datetime | moment('from')"
+            @click="evt => onClick(operate)"
+            is-link
+          >
+            <template #label>
+              <div class="van-ellipsis" :key="i" v-for="(f, i) in formatJson(operate.form_data_json)">
+                {{ f.label }}:{{ f.val }}
+              </div>
+            </template>
+          </van-cell>
+        </van-cell-group>
+      </van-list>
+    </van-pull-refresh>
   </div>
 </template>
 <script>
@@ -48,8 +58,8 @@ export default {
       loading: false,
       refreshing: false,
       //分页
-      page: 1,
-      rows: 20
+      page: 0,
+      rows: 15
     }
   },
   computed: {
@@ -72,6 +82,17 @@ export default {
           break
       }
       return ret
+    },
+    offset: function () {
+      if (this.page == 0) {
+        return 0
+      } else {
+        let offset = this.page * this.rows
+        return offset
+      }
+    },
+    limit: function () {
+      return this.rows || 15
     }
   },
   created() {
@@ -93,19 +114,36 @@ export default {
       let jsonArray = formJsonFieldsFormat(formJson)
       return jsonArray
     },
-    doQuery() {
+    setResult(isFetchMore = false, newResult = []) {
+      if (newResult.length > 0) {
+        this.loading = false
+      } else {
+        this.finished = true
+        this.loading = false
+      }
+      if (isFetchMore) {
+        this.operates = [...this.operates, ...newResult]
+      } else {
+        this.operates = newResult
+      }
+    },
+    doQuery(isFetchMore = false) {
+      let newResult = []
       switch (this.queryType) {
         case 'myWaitting':
           this.$apollo
             .query({
               query: QuerMyOperates,
               variables: {
+                offset: this.offset,
+                limit: this.limit,
                 states: ['draft'],
                 user_id: JSON.parse(localStorage.getItem('CURRENT_USER')).id
               }
             })
             .then(data => {
-              this.operates = data.data.myOperates.map(op => op.workflow_info_node_instance.workflow_info_instance)
+              newResult = data.data.myOperates.map(op => op.workflow_info_node_instance.workflow_info_instance)
+              this.setResult(isFetchMore,newResult)
             })
           break
         case 'myDone':
@@ -113,12 +151,16 @@ export default {
             .query({
               query: QuerMyOperates,
               variables: {
+                offset: this.offset,
+                limit: this.limit,
+
                 states: ['done', 'rejected', 'forwarded'],
                 user_id: JSON.parse(localStorage.getItem('CURRENT_USER')).id
               }
             })
             .then(data => {
-              this.operates = data.data.myOperates.map(op => op.workflow_info_node_instance.workflow_info_instance)
+              newResult = data.data.myOperates.map(op => op.workflow_info_node_instance.workflow_info_instance)
+              this.setResult(isFetchMore,newResult)
             })
 
           break
@@ -127,18 +169,33 @@ export default {
             .query({
               query: QuerMySubmitted,
               variables: {
+                offset: this.offset,
+                limit: this.limit,
+
                 states: ['done', 'rejected', 'draft', 'processing'],
                 starter_id: JSON.parse(localStorage.getItem('CURRENT_USER')).id
               }
             })
             .then(data => {
-              this.operates = data.data.mySubmitted
+              newResult = data.data.mySubmitted
+              this.setResult(isFetchMore,newResult)
             })
 
           break
         default:
           break
       }
+    },
+    onLoad() {
+      this.page++
+      this.doQuery(true)
+    },
+    onRefresh() {
+      this.page = 0
+      this.doQuery()
+      this.refreshing = false
+      this.finished = false
+      this.loading = false
     }
   }
 }

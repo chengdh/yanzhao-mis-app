@@ -1,6 +1,7 @@
 <template>
   <div>
-    <van-cell-group inset>
+    <van-nav-bar title="消息中心" :fixed=true />
+    <van-cell-group inset style="margin-top:6em">
       <van-search shape="round" v-model="search_kw" placeholder="搜索关键词" />
     </van-cell-group>
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">

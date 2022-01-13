@@ -1,0 +1,6 @@
+version: '3'
+services:
+  cordova-android-app:
+    image: beevelop/cordova
+    volumes:
+       - .:/app

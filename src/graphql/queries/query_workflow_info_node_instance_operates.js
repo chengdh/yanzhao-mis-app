@@ -2,13 +2,15 @@ import gql from 'graphql-tag'
 //待处理 $state='draft'
 //已处理 $state='done'
 export const QuerMyOperates = gql`
-  query myOperates($user_id: bigint!, $states: [String!]) {
+  query myOperates($user_id: bigint!, $states: [String!], $offset: Int! = 0, $limit: Int! = 15) {
     myOperates: yws_workflow_info_node_instance_operates(
       where: {
         state: { _in: $states }
         user_id: { _eq: $user_id }
         workflow_info_node_instance: { workflow_info_node: { node_type: { _nin: ["start", "end", "condition"] } } }
       }
+      offset: $offset
+      limit: $limit
     ) {
       audit_date
       audit_note
@@ -48,8 +50,12 @@ export const QuerMyOperates = gql`
 `
 //我发起的
 export const QuerMySubmitted = gql`
-  query MySubmitted($starter_id: bigint!, $states: [String!]) {
-    mySubmitted: yws_workflow_info_instances(where: { state: { _in: $states }, starter_id: { _eq: $starter_id } }) {
+  query MySubmitted($starter_id: bigint!, $states: [String!], $offset: Int! = 0, $limit: Int! = 15) {
+    mySubmitted: yws_workflow_info_instances(
+      where: { state: { _in: $states }, starter_id: { _eq: $starter_id } }
+      offset: $offset
+      limit: $limit
+    ) {
       id
       name
       start_datetime
