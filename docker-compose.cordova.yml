@@ -2,5 +2,6 @@ version: '3'
 services:
   cordova-android-app:
     image: beevelop/cordova
+    working_dir: /app
     volumes:
-       - .:/app
+       - ./cordova-android-app:/app

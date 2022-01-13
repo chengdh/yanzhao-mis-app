@@ -1,8 +1,8 @@
 // 正式
 module.exports = {
-  title: 'vue-h5-template',
-  baseUrl: 'https://www.xxx.com/', // 正式项目地址
-  baseApi: 'https://www.xxx.com/api', // 正式api请求地址
+  title: '综合办公平台',
+  baseUrl: 'http://bg.kairuiwuliu.com:9018',
+  baseApi: 'http://bg.kairuiwuliu.com:18080/v1/graphql',
   APPID: 'xxx',
   APPSECRET: 'xxx',
   $cdn: 'https://www.sunniejs.cn/static'
