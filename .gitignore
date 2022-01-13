@@ -22,3 +22,18 @@ yarn-error.log*
 
 package-lock.json
 yarn.lock
+
+### ApacheCordova ###
+# Apache Cordova generated files and directories
+cordova-android-app/bin/*
+!cordova-android-app/plugins
+!cordova-android-app/plugins/android.json
+!cordova-android-app/plugins/fetch.json
+cordova-android-app/plugins/*
+cordova-android-app/platforms/*
+
+cordova-android-app/www/*
+cordova-android-app/node_modules
+cordova-android-app/www/index.js
+cordova-android-app/js/**/*.js
+cordova-android-app/js/**/*.js.map
