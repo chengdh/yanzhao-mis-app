@@ -2,6 +2,7 @@
 // https://github.com/zloirock/core-js/blob/master/docs/2019-03-19-core-js-3-babel-and-a-look-into-the-future.md#babelpolyfill
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
+import VConsole from 'vconsole'
 
 import Vue from 'vue'
 import App from './App.vue'
@@ -9,7 +10,7 @@ import router from './router'
 import store from './store'
 
 // 设置 js中可以访问 $cdn
-import { $cdn } from '@/config'
+import { $cdn,baseApi } from '@/config'
 import VueApollo from 'vue-apollo'
 import apolloClient from '@/apollo_client'
 
@@ -28,7 +29,8 @@ const apolloProvider = new VueApollo({
   defaultClient: apolloClient
 })
 Vue.use(VueApollo)
-
+const vconsole = new VConsole()
+Vue.use(vconsole)
 const moment = require('moment')
 require('moment/locale/zh-cn')
 

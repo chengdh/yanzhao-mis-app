@@ -34,6 +34,7 @@
 <script>
 import HasuraAuth from '@/graphql/queries/hasura_auth'
 import { Toast } from 'vant'
+
 export default {
   data() {
     return {
@@ -43,6 +44,7 @@ export default {
   },
   methods: {
     onSubmit() {
+      console.log('submit login')
       this.$apollo
         .query({
           query: HasuraAuth,
