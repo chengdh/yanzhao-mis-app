@@ -37,7 +37,7 @@ export default {
         {
           title: '我的',
           to: {
-            name: 'About'
+            name: 'Profile'
           },
           icon: 'user-o'
         }

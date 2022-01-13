@@ -23,16 +23,17 @@
         />
       </van-grid>
     </van-cell-group>
-    <van-cell-group inset :key="cat.id" v-for="cat in formCategories" :title="cat.name">
+    <van-cell-group inset :key="cat.id" v-for="cat in nonBlankFormCategories" :title="cat.name">
       <van-grid column-num="3">
         <van-grid-item
           v-for="formInfo in cat.form_infos"
           :key="formInfo.id"
           @click="startFormInfo(formInfo)"
           icon="photo-o"
+          style="width: 100%;overflow: hidden"
         >
           <template #text>
-            <div style="width: 60px;" class="van-ellipsis">{{ formInfo.name }}</div>
+            <span class="van-ellipsis">{{ formInfo.name }}</span>
           </template>
         </van-grid-item>
       </van-grid>
@@ -69,6 +70,12 @@ export default {
     return {
       formCategories: []
     }
+  },
+  computed: {
+    nonBlankFormCategories: function(){
+      return this.formCategories.filter(fc => fc.form_infos.length > 0)
+    }
+
   },
   created() {},
   mounted() {},

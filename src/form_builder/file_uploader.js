@@ -126,11 +126,11 @@ window.fbControls.push(function (controlClass) {
      * javascript & css to load
      */
     configure() {
-      this.js = "/javascripts/jquery.filer-1.3.0/js/jquery.filer.min.js";
-      this.css = [
-        "/javascripts/jquery.filer-1.3.0/css/jquery.filer.css",
-        "/javascripts/jquery.filer-1.3.0/css/themes/jquery.filer-dragdropbox-theme.css",
-      ];
+      // this.js = "/javascripts/jquery.filer-1.3.0/js/jquery.filer.min.js";
+      // this.css = [
+      //   "/javascripts/jquery.filer-1.3.0/css/jquery.filer.css",
+      //   "/javascripts/jquery.filer-1.3.0/css/themes/jquery.filer-dragdropbox-theme.css",
+      // ];
     }
 
     /**
@@ -144,97 +144,20 @@ window.fbControls.push(function (controlClass) {
         <div style="display: flex;flex-wrap: wrap;" class="file_list"></div>
         `;
       //将已上传的文件信息储存在Input的value中,便于后续显示
-      this.dom = this.markup("div", content, {
+      this.dom = this.markup("div", null, {
         id: this.config.id + "_wrapper",
         name: this.config.name + "_wrapper",
       });
       return this.dom;
     }
     setUserData(userData) {
-      jQuery(this.dom).find("input[type=hidden]").val(JSON.stringify(userData));
+      // jQuery(this.dom).find("input[type=hidden]").val(JSON.stringify(userData));
     }
 
     /**
      * onRender callback
      */
     onRender() {
-      var _this = this;
-      var uploadFile = {
-        url: "/file_uploads",
-        data: { "file_upload[col_1]": "test" },
-        type: "POST",
-        enctype: "multipart/form-data",
-        beforeSend: function () {},
-        success: function (data, el) {
-          var parent = el.find(".jFiler-jProgressBar").parent();
-          el.find(".jFiler-jProgressBar").fadeOut("slow", function () {
-            jQuery(
-              '<div class="jFiler-item-others text-success"><i class="icon-jfi-check-circle"></i>成功</div>'
-            )
-              .hide()
-              .appendTo(parent)
-              .fadeIn("slow");
-          });
-
-          if (data.code == 0) {
-            var url = data.result.url;
-            //处理上传后的url
-            var filerKit = jQuery("#filer_input").prop("jFiler");
-            var files_list = filerKit.files_list;
-            files_list[files_list.length - 1].url = url;
-
-            //设置userData
-            var user_data = [];
-            for (var f of files_list) {
-              var f_data = {
-                name: f.file.name,
-                size: f.file.size,
-                type: f.file.type,
-                url: f.url,
-              };
-              user_data.push(f_data);
-            }
-            _this.setUserData(user_data);
-          } else {
-            jQuery.notify("文件上传失败!");
-          }
-        },
-        error: function (el) {
-          var parent = el.find(".jFiler-jProgressBar").parent();
-          el.find(".jFiler-jProgressBar").fadeOut("slow", function () {
-            jQuery(
-              '<div class="jFiler-item-others text-error"><i class="icon-jfi-minus-circle"></i>失败</div>'
-            )
-              .hide()
-              .appendTo(parent)
-              .fadeIn("slow");
-          });
-        },
-        statusCode: null,
-        onProgress: null,
-        onComplete: null,
-      };
-      var files = [];
-      if (this.config.userData && this.config.userData[0] != "" ) {
-        jQuery(this.dom).find("#filer_input").hide();
-        files = JSON.parse(this.config.userData[0]);
-        this.setUserData(files)
-        for (var f_url of files) {
-          var img_el = jQuery(`<img src="${f_url.url}" >` );
-          jQuery(this.dom).find(".file_list").append(img_el);
-        }
-      } else {
-        jQuery(this.dom).find("#filer_input").filer({
-          changeInput: filer_default_opts.changeInput2,
-          showThumbs: true,
-          theme: "dragdropbox",
-          captions: filer_default_opts.captions,
-          templates: filer_default_opts.templates,
-          dragDrop: filer_default_opts.dragDrop,
-          uploadFile: uploadFile,
-        });
-        jQuery(".jFiler-input-dragDrop").css({ "margin-left": 0 });
-      }
     }
   }
 

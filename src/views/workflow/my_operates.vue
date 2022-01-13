@@ -70,8 +70,7 @@ export default {
           // offset: this.offset,
           // limit: this.limit,
           states: ['draft'],
-          // user_id: JSON.parse(localStorage.getItem('CURRENT_USER')).id
-          user_id: 566
+          user_id: JSON.parse(localStorage.getItem('CURRENT_USER')).id
         }
       }
     }
@@ -87,7 +86,7 @@ export default {
       refreshing: false,
       //分页
       page: 0,
-      rows: 10
+      rows: 15
     }
   },
   computed: {
@@ -136,7 +135,7 @@ export default {
         variables: {
           offset: this.offset,
           limit: this.limit,
-          state: 'draft',
+          states: ['draft'],
           user_id: JSON.parse(localStorage.getItem('CURRENT_USER')).id
         },
         // 用新数据转换之前的结果

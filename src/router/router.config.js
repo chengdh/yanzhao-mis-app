@@ -71,10 +71,10 @@ export const constantRouterMap = [
       },
 
       {
-        path: '/about',
-        name: 'About',
-        component: () => import('@/views/home/about'),
-        meta: { title: '我', keepAlive: false }
+        path: '/profile',
+        name: 'Profile',
+        component: () => import('@/views/profile/profile'),
+        meta: { title: '我的', keepAlive: false }
       }
     ]
   }

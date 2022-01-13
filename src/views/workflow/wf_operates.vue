@@ -87,7 +87,7 @@ export default {
       }
     },
     operateTitle(operate) {
-      return `${operate.starter.username}提交的${operate.workflow_info.name}`
+      return `${operate.starter.username}提交的${operate.workflow_info && operate.workflow_info.name}`
     },
     formatJson(formJson) {
       let jsonArray = formJsonFieldsFormat(formJson)
