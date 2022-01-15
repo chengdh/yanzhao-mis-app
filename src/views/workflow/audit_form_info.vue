@@ -1,7 +1,7 @@
 <template>
   <div>
     <van-nav-bar :title="title" left-text="返回" left-arrow @click-left="() => this.$router.back(-1)" />
-    <Form :workflowInfoInstance="workflowInfoInstance" />
+    <Form :workflowInfoInstanceId="workflowInfoInstanceId" />
     <van-cell-group inset title="审批">
       <van-field type="textarea" placeholder="输入审批意见"></van-field>
     </van-cell-group>

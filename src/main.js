@@ -10,7 +10,7 @@ import router from './router'
 import store from './store'
 
 // 设置 js中可以访问 $cdn
-import { $cdn,baseApi } from '@/config'
+import { $cdn, baseApi } from '@/config'
 import VueApollo from 'vue-apollo'
 import apolloClient from '@/apollo_client'
 
@@ -35,7 +35,7 @@ const moment = require('moment')
 require('moment/locale/zh-cn')
 
 Vue.use(require('vue-moment'), {
-    moment
+  moment
 })
 
 Vue.prototype.$cdn = $cdn

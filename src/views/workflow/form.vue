@@ -35,16 +35,18 @@ import $ from 'jquery'
 window.jQuery = $
 window.$ = $
 
+import { QueryWorkflowInfoInstanceByPk } from '@/graphql/queries/query_workflow_info_instance_by_pk'
 require('jquery-ui-sortable')
 require('formBuilder')
 require('formBuilder/dist/form-render.min.js')
 require('@/form_builder/num2rmb.js')
+require('@/form_builder/file_uploader.js')
 
 export default {
   name: 'Form',
   props: {
-    workflowInfoInstance: {
-      type: Object,
+    workflowInfoInstanceId: {
+      type: Number | String,
       required: true
     }
   },
@@ -55,24 +57,36 @@ export default {
       readony: true
     }
   },
+  apollo: {
+    workflowInfoInstance: {
+      query: QueryWorkflowInfoInstanceByPk,
+      variables() {
+        return {
+          id: this.workflowInfoInstanceId
+        }
+      }
+    }
+  },
   methods: {},
-  watch: {},
+  watch: {
+    workflowInfoInstance: function () {
+      let formRenderOpts = {
+        formData: this.workflowInfoInstance.form_data_json,
+        dataType: 'json'
+      }
+      this.formRenderInstance = $(this.$refs.fb_editor).formRender(formRenderOpts)
+      $(this.$refs.fb_editor).find('input').attr('disabled', this.readonly)
+      $(this.$refs.fb_editor).find('textarea').attr('disabled', this.readonly)
+      $(this.$refs.fb_editor).find('select').attr('disabled', this.readonly)
+    }
+  },
   computed: {
     title: function () {
       return (this.workflowInfoInstance && this.workflowInfoInstance.name) || ''
     }
   },
   created() {},
-  mounted() {
-    let formRenderOpts = {
-      formData: this.workflowInfoInstance.form_data_json,
-      dataType: 'json'
-    }
-    this.formRenderInstance = $(this.$refs.fb_editor).formRender(formRenderOpts)
-    $(this.$refs.fb_editor).find('input').attr('disabled', this.readonly)
-    $(this.$refs.fb_editor).find('textarea').attr('disabled', this.readonly)
-    $(this.$refs.fb_editor).find('select').attr('disabled', this.readonly)
-  }
+  mounted() {}
 }
 </script>
 <style scoped>

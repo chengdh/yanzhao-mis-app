@@ -143,7 +143,7 @@ export default {
             })
             .then(data => {
               newResult = data.data.myOperates.map(op => op.workflow_info_node_instance.workflow_info_instance)
-              this.setResult(isFetchMore,newResult)
+              this.setResult(isFetchMore, newResult)
             })
           break
         case 'myDone':
@@ -160,7 +160,7 @@ export default {
             })
             .then(data => {
               newResult = data.data.myOperates.map(op => op.workflow_info_node_instance.workflow_info_instance)
-              this.setResult(isFetchMore,newResult)
+              this.setResult(isFetchMore, newResult)
             })
 
           break
@@ -178,7 +178,7 @@ export default {
             })
             .then(data => {
               newResult = data.data.mySubmitted
-              this.setResult(isFetchMore,newResult)
+              this.setResult(isFetchMore, newResult)
             })
 
           break
