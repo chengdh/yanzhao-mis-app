@@ -2,10 +2,9 @@ import { ApolloClient } from 'apollo-client'
 import { createHttpLink } from 'apollo-link-http'
 import { setContext } from 'apollo-link-context'
 import { onError } from 'apollo-link-error'
-import { ApolloLink, from } from 'apollo-link'
+import { from } from 'apollo-link'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { baseApi } from '@/config'
-import Router from '@/router'
 import router from './router'
 const httpLink = createHttpLink({
   uri: baseApi
@@ -13,11 +12,12 @@ const httpLink = createHttpLink({
 
 const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) => {
   if (graphQLErrors) {
-    for (let err of graphQLErrors) {
+    for (const err of graphQLErrors) {
       switch (err.extensions.code) {
         // Apollo Server sets code to UNAUTHENTICATED
         // when an AuthenticationError is thrown in a resolver
         case 'UNAUTHENTICATED':
+          break
         // Modify the operation context with a new token
         // const oldHeaders = operation.getContext().headers;
         // operation.setContext({
@@ -31,6 +31,7 @@ const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) 
         case 'invalid-jwt':
           localStorage.removeItem('JWT_TOKEN')
           router.push({ name: 'Login' })
+          break
         // return forward(operation)
       }
     }

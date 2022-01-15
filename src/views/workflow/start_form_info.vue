@@ -23,7 +23,7 @@
         </van-step>
       </van-steps>
     </van-cell-group>
-    <van-cell-group inset id="footer" style="margin-top: 10px;padding: 10px;">
+    <van-cell-group inset id="footer" style="margin-top: 10px; padding: 10px">
       <van-button type="primary" @click="onCreate" size="small" block round>提交</van-button>
     </van-cell-group>
     <van-popup v-model="showSelectUser" @closed="onPopupClosed" closeable close-icon="close" position="bottom">
@@ -60,7 +60,7 @@ export default {
   name: 'StartFormInfo',
   props: {
     formInfoId: {
-      type: String | Number,
+      type: [String, Number],
       required: true
     }
   },
@@ -132,7 +132,7 @@ export default {
 
     //节点title
     nodeTitle(node) {
-      let ret = node.name || this.nodeTypeDes(node)
+      const ret = node.name || this.nodeTypeDes(node)
       return ret
     },
 
@@ -143,16 +143,16 @@ export default {
 
     //节点审批用户
     nodeAuditUsers(node) {
-      let node_users = node.workflow_info_node_users
+      const node_users = node.workflow_info_node_users
       let users = node_users.map(nu => nu.user)
-      for (let node_role of node.workflow_info_node_roles) {
-        let users_role = node_role.role_oa.role_oa_users.map(roa_u => roa_u.user)
+      for (const node_role of node.workflow_info_node_roles) {
+        const users_role = node_role.role_oa.role_oa_users.map(roa_u => roa_u.user)
         users = [...users, ...users_role]
       }
       return users
     },
     nodeAuditUsersString(node) {
-      let users = this.nodeAuditUsers(node)
+      const users = this.nodeAuditUsers(node)
         .map(u => u.username)
         .join(',')
       return users
@@ -160,15 +160,15 @@ export default {
     //弹出的用户选择窗口
     onPopupSelectUser(node) {
       this.showSelectUser = true
-      let nodeId = node.id
+      const nodeId = node.id
       this.activeNodeId = nodeId
       if (this.activeNodeId) {
-        let ids = this.selectedUserIds[this.activeNodeId]
+        const ids = this.selectedUserIds[this.activeNodeId]
         if (ids) this.activeIds = [...ids]
       }
     },
     onPopupClosed() {
-      let _this = this
+      const _this = this
       if (this.activeNodeId) {
         this.$apollo
           .query({
@@ -192,7 +192,7 @@ export default {
         return
       }
 
-      let o = this.getWorkflowInfoInstanceObject()
+      const o = this.getWorkflowInfoInstanceObject()
       this.$apollo
         .mutate({
           mutation: CreateWorkflowInfoInstance,
@@ -223,11 +223,11 @@ export default {
             })
         })
     },
-    getWorkflowInfoInstanceObject: function () {
-      let wfInfo = this.formInfo.workflow_infos[0]
-      let wfiUsersData = []
+    getWorkflowInfoInstanceObject: function() {
+      const wfInfo = this.formInfo.workflow_infos[0]
+      const wfiUsersData = []
       for (const [nId, uIds] of Object.entries(this.selectedUserIds)) {
-        let linesData = uIds.map(uId => ({ user_id: uId }))
+        const linesData = uIds.map(uId => ({ user_id: uId }))
         wfiUsersData.push({
           workflow_info_node_id: nId,
           workflow_info_instance_user_lines: {
@@ -235,7 +235,7 @@ export default {
           }
         })
       }
-      let object = {
+      const object = {
         workflow_info_id: wfInfo.id,
         name: this.formInfo.name,
         note: wfInfo.note,
@@ -251,34 +251,32 @@ export default {
 
     //表单提交时验证
     validateForm() {
-      let validated = true
-      let userData = this.formRenderInstance.userData
-      for (let d of userData) {
-        if (d.required && d.userData[0] == '') {
+      const userData = this.formRenderInstance.userData
+      for (const d of userData) {
+        if (d.required && d.userData[0] === '') {
           return false
         }
       }
-      return validated
+      return true
     },
 
     //验证是否设置了审批用户
     validateRequiredUser() {
-      let validated = true
-      let ids = this.requireNodeIds
+      const ids = this.requireNodeIds
       //验证是否设置了自选用户
-      for (let nId of ids) {
-        let userIds = this.selectedUserIds[nId]
+      for (const nId of ids) {
+        const userIds = this.selectedUserIds[nId]
         if (!userIds) {
           return false
         }
       }
-      return validated
+      return true
     }
   },
   watch: {
-    formInfo: function (val) {
+    formInfo: function(val) {
       if (this.formInfo) {
-        let formRenderOpts = {
+        const formRenderOpts = {
           formData: this.formInfo.form_info_design.form_json,
           dataType: 'json'
         }
@@ -287,23 +285,23 @@ export default {
     }
   },
   computed: {
-    title: function () {
+    title: function() {
       return (this.formInfo && this.formInfo.name) || ''
     },
     //发起表单时必须手动选择审批人的节点
-    requireNodes: function () {
+    requireNodes: function() {
       let ret = []
       if (this.formInfo) {
         ret = this.formInfo.workflow_infos[0].workflow_info_nodes.filter(
-          n => n.audit_type == 'beginner_select' || n.audit_type == 'copy_to'
+          n => n.audit_type === 'beginner_select' || n.audit_type === 'copy_to'
         )
       }
       return ret
     },
 
-    requireNodeIds: function () {
+    requireNodeIds: function() {
       let ret = []
-      let nodes = this.requireNodes
+      const nodes = this.requireNodes
       ret = nodes.map(n => n.id)
       return ret
     }

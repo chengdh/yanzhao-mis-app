@@ -234,6 +234,7 @@ module.exports = {
         nonwords: false
       }
     ],
+    /*
     'spaced-comment': [
       2,
       'always',
@@ -241,6 +242,7 @@ module.exports = {
         markers: ['global', 'globals', 'eslint', 'eslint-disable', '*package', '!', ',']
       }
     ],
+    */
     'template-curly-spacing': [2, 'never'],
     'use-isnan': 2,
     'valid-typeof': 2,
