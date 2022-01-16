@@ -37,9 +37,17 @@ require('moment/locale/zh-cn')
 Vue.use(require('vue-moment'), {
   moment
 })
-
 Vue.prototype.$cdn = $cdn
 Vue.config.productionTip = false
+
+// 增加cordova文件
+if (window.location.protocol === 'file:') {
+  let cordovaScript = document.createElement('script')
+  cordovaScript.setAttribute('type', 'text/javascript')
+  cordovaScript.setAttribute('src', 'cordova.js')
+  document.body.appendChild(cordovaScript)
+  require('@/jpush.js')
+}
 
 new Vue({
   el: '#app',
