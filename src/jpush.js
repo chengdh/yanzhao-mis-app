@@ -1,3 +1,5 @@
+import apolloClient from '@/apollo_client'
+import { UpdateUserRegisterId, InsertUserRegisterId } from '@/graphql/mutation/create_user_register_id'
 const onDeviceReady = function () {
   document.addEventListener(
     'jpush.receiveRegistrationId',
@@ -13,9 +15,34 @@ const getRegistrationID = function () {
   window.JPush.getRegistrationID(onGetRegistrationID)
 }
 
-const onGetRegistrationID = function (data) {
+const onGetRegistrationID = function (regId) {
   try {
-    console.log('JPushPlugin:registrationID is ' + data)
+    console.log('JPushPlugin:registrationID is ' + regId)
+    console.log(apolloClient)
+
+    const user = JSON.parse(localStorage.getItem('CURRENT_USER'))
+    if (user) {
+      apolloClient
+        .mutate({
+          mutation: UpdateUserRegisterId,
+          variables: {
+            user_id: user.id,
+            register_id: regId 
+          }
+        })
+        .then(data => {
+          console.log(data)
+          if (data.data.update_yws_user_register_ids.affected_rows == 0) {
+            apolloClient.mutate({
+              mutation: InsertUserRegisterId,
+              variables: {
+                user_id: user.id,
+                register_id: regId 
+              }
+            })
+          }
+        })
+    }
   } catch (exception) {
     console.log(exception)
   }
