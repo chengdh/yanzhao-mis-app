@@ -100,3 +100,29 @@ export const QuerMyReceived = gql`
     }
   }
 `
+export const QueryWorkflowInfoNodeInstanceOperateByPk = gql`
+  query queryWorkflowInfoNodeInstanceOperate($id: bigint!) {
+    workflowInfoNodeInstanceOperate: yws_workflow_info_node_instance_operates_by_pk(id: $id) {
+      id
+      audit_date
+      audit_note
+      created_at
+      form_data_json
+      state
+      user_id
+      workflow_info_node_instance {
+        id
+        name
+        workflow_info_instance {
+          id
+          name
+          start_datetime
+          starter {
+            id
+            username
+          }
+        }
+      }
+    }
+  }
+`

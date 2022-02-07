@@ -223,7 +223,7 @@ export default {
             })
         })
     },
-    getWorkflowInfoInstanceObject: function() {
+    getWorkflowInfoInstanceObject: function () {
       const wfInfo = this.formInfo.workflow_infos[0]
       const wfiUsersData = []
       for (const [nId, uIds] of Object.entries(this.selectedUserIds)) {
@@ -274,7 +274,7 @@ export default {
     }
   },
   watch: {
-    formInfo: function(val) {
+    formInfo: function (val) {
       if (this.formInfo) {
         const formRenderOpts = {
           formData: this.formInfo.form_info_design.form_json,
@@ -285,11 +285,11 @@ export default {
     }
   },
   computed: {
-    title: function() {
+    title: function () {
       return (this.formInfo && this.formInfo.name) || ''
     },
     //发起表单时必须手动选择审批人的节点
-    requireNodes: function() {
+    requireNodes: function () {
       let ret = []
       if (this.formInfo) {
         ret = this.formInfo.workflow_infos[0].workflow_info_nodes.filter(
@@ -299,7 +299,7 @@ export default {
       return ret
     },
 
-    requireNodeIds: function() {
+    requireNodeIds: function () {
       let ret = []
       const nodes = this.requireNodes
       ret = nodes.map(n => n.id)

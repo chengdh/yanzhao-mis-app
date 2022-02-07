@@ -43,6 +43,7 @@ export default {
     }
   },
   methods: {
+    //登录
     onSubmit() {
       console.log('submit login')
       this.$apollo

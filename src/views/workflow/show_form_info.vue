@@ -1,7 +1,7 @@
 <template>
   <div style="display: flex; flex-direction: column">
     <van-nav-bar :title="title" left-text="返回" left-arrow @click-left="() => this.$router.back(-1)" />
-    <Form :workflowInfoInstanceId="workflowInfoInstanceId" />
+    <Form :readonly="true" :workflowInfoInstanceId="workflowInfoInstanceId" />
   </div>
 </template>
 <script>

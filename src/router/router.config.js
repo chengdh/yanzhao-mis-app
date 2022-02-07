@@ -35,7 +35,7 @@ export const constantRouterMap = [
     path: '/workflow/audit_form_info',
     name: 'AuditFormInfo',
     component: () => import('@/views/workflow/audit_form_info'),
-    props: route => ({ workflowInfoInstanceId: route.query.workflowInfoInstanceId}),
+    props: route => ({ workflowInfoNodeInstanceOperateId: route.query.workflowInfoNodeInstanceOperateId}),
     meta: { title: '审批表单', keepAlive: false }
   },
 

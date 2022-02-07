@@ -25,7 +25,8 @@ import {
   Notify,
   Search,
   Divider,
-  PullRefresh
+  PullRefresh,
+  Loading
 } from 'vant'
 Vue.use(Button)
   .use(NavBar)
@@ -52,3 +53,4 @@ Vue.use(Button)
   .use(Search)
   .use(Divider)
   .use(PullRefresh)
+  .use(Loading)

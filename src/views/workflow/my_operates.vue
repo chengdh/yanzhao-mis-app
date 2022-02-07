@@ -1,7 +1,7 @@
 <template>
   <div>
-    <van-nav-bar title="消息中心" :fixed=true />
-    <van-cell-group inset style="margin-top:6em">
+    <van-nav-bar title="消息中心" :fixed="true" />
+    <van-cell-group inset style="margin-top: 6em">
       <van-search shape="round" v-model="search_kw" placeholder="搜索关键词" />
     </van-cell-group>
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
@@ -12,7 +12,7 @@
         finished-text="没有更多了"
         @load="onLoad"
       >
-        <van-cell-group inset :key="operate.id" v-for="operate in operateList" @click="onClick">
+        <van-cell-group inset :key="operate.id" v-for="operate in operateList" @click="evt => onClick(operate)">
           <van-cell
             :title="operate.workflow_info_instance.starter.username"
             :value="operate.workflow_info_instance.start_datetime | moment('from')"
@@ -122,8 +122,9 @@ export default {
   created() {},
   mounted() {},
   methods: {
-    onClick() {
-      this.$router.push({ name: 'FormInfo' })
+    onClick(operate) {
+      // this.$router.push({ name: 'ShowFormInfo', query: { workflowInfoInstanceId: operate.workflow_info_instance.id } })
+      this.$router.push({ name: 'AuditFormInfo', query: { workflowInfoNodeInstanceOperateId: 4 } })
     },
     formInfoName(operate) {
       return `提交的${operate.workflow_info_instance.name}待审批`

@@ -48,13 +48,16 @@ export default {
     workflowInfoInstanceId: {
       type: Number | String,
       required: true
+    },
+    readonly : {
+      type: Boolean,
+      default: false
     }
   },
   components: {},
   data() {
     return {
       formRenderInstance: null,
-      readony: true
     }
   },
   apollo: {
