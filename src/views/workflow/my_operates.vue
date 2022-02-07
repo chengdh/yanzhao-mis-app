@@ -124,7 +124,7 @@ export default {
   methods: {
     onClick(operate) {
       // this.$router.push({ name: 'ShowFormInfo', query: { workflowInfoInstanceId: operate.workflow_info_instance.id } })
-      this.$router.push({ name: 'AuditFormInfo', query: { workflowInfoNodeInstanceOperateId: 4 } })
+      this.$router.push({ name: 'AuditFormInfo', query: { workflowInfoNodeInstanceOperateId: operate.id } })
     },
     formInfoName(operate) {
       return `提交的${operate.workflow_info_instance.name}待审批`
