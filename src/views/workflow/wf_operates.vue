@@ -102,7 +102,7 @@ export default {
   methods: {
     onClick(wfi) {
       if (this.queryType == 'myWaitting') {
-        this.$router.push({ name: 'AuditFormInfo', query: { workflowInfoInstanceId: wfi.id } })
+        this.$router.push({ name: 'AuditFormInfo', query: { workflowInfoNodeInstanceOperateId: wfi.operateId } })
       } else {
         this.$router.push({ name: 'ShowFormInfo', query: { workflowInfoInstanceId: wfi.id } })
       }
@@ -142,7 +142,12 @@ export default {
               }
             })
             .then(data => {
-              newResult = data.data.myOperates.map(op => op.workflow_info_node_instance.workflow_info_instance)
+              newResult = data.data.myOperates.map(op => {
+                let wfi = op.workflow_info_node_instance.workflow_info_instance
+                //待处理的数据,需要附加上operateId
+                wfi.operateId = op.id
+                return wfi
+              })
               this.setResult(isFetchMore, newResult)
             })
           break
