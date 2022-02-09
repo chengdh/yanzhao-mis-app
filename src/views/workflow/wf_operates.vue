@@ -139,7 +139,8 @@ export default {
                 limit: this.limit,
                 states: ['draft'],
                 user_id: JSON.parse(localStorage.getItem('CURRENT_USER')).id
-              }
+              },
+              fetchPolicy: "network-only"
             })
             .then(data => {
               newResult = data.data.myOperates.map(op => {
@@ -161,7 +162,8 @@ export default {
 
                 states: ['done', 'rejected', 'forwarded'],
                 user_id: JSON.parse(localStorage.getItem('CURRENT_USER')).id
-              }
+              },
+              fetchPolicy: "network-only"
             })
             .then(data => {
               newResult = data.data.myOperates.map(op => op.workflow_info_node_instance.workflow_info_instance)
@@ -179,7 +181,8 @@ export default {
 
                 states: ['done', 'rejected', 'draft', 'processing'],
                 starter_id: JSON.parse(localStorage.getItem('CURRENT_USER')).id
-              }
+              },
+              fetchPolicy: "network-only"
             })
             .then(data => {
               newResult = data.data.mySubmitted

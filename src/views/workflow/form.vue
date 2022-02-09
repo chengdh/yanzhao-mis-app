@@ -14,7 +14,7 @@
           />
         </van-step>
 
-        <van-step v-for="wfiNode in workflowInfoInstance.workflowInfoInstanceNodes" :key="wfiNode.id">
+        <van-step v-for="wfiNode in workflowInfoInstance.workflow_info_instance_nodes" :key="wfiNode.id">
           <van-cell-group :title="wfiNode.name">
             <van-cell
               center

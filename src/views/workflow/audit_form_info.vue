@@ -13,16 +13,15 @@
 
     <van-cell-group inset style="display: flex; justify-content: center">
       <div style="margin: 10px">
-        <van-button type="danger" round size="small" :disabled="processing" @click="onReject">
-          <van-icon name="cross" />
-          拒绝
-        </van-button>
-      </div>
-
-      <div style="margin: 10px">
         <van-button type="primary" round size="small" :disabled="processing" @click="onAudit">
           <van-icon name="success" />
           通过
+        </van-button>
+      </div>
+      <div style="margin: 10px">
+        <van-button type="danger" round size="small" :disabled="processing" @click="onReject">
+          <van-icon name="cross" />
+          拒绝
         </van-button>
       </div>
     </van-cell-group>

@@ -12,7 +12,12 @@
         finished-text="没有更多了"
         @load="onLoad"
       >
-        <van-cell-group inset :key="operate.workflow_info_node_instance_operate.id" v-for="operate in operateList" @click="evt => onClick(operate)">
+        <van-cell-group
+          inset
+          :key="operate.workflow_info_node_instance_operate.id"
+          v-for="operate in operateList"
+          @click="evt => onClick(operate)"
+        >
           <van-cell
             :title="operate.workflow_info_instance.starter.username"
             :value="operate.workflow_info_instance.start_datetime | moment('from')"
@@ -73,7 +78,8 @@ export default {
           states: ['draft'],
           user_id: JSON.parse(localStorage.getItem('CURRENT_USER')).id
         }
-      }
+      },
+      fetchPolicy: 'network-only'
     }
   },
   data() {
@@ -124,7 +130,10 @@ export default {
   methods: {
     onClick(operate) {
       // this.$router.push({ name: 'ShowFormInfo', query: { workflowInfoInstanceId: operate.workflow_info_instance.id } })
-      this.$router.push({ name: 'AuditFormInfo', query: { workflowInfoNodeInstanceOperateId: operate.workflow_info_node_instance_operate.id } })
+      this.$router.push({
+        name: 'AuditFormInfo',
+        query: { workflowInfoNodeInstanceOperateId: operate.workflow_info_node_instance_operate.id }
+      })
     },
     formInfoName(operate) {
       return `提交的${operate.workflow_info_instance.name}待审批`
