@@ -12,14 +12,15 @@ export const QuerMyOperates = gql`
       offset: $offset
       limit: $limit
     ) {
+      id
       audit_date
       audit_note
       created_at
       form_data_json
-      id
       state
       user_id
       workflow_info_node_instance {
+        id
         name
         workflow_info_node {
           id
@@ -87,8 +88,10 @@ export const QuerMyReceived = gql`
       state
       user_id
       workflow_info_node_instance {
+        id
         name
         workflow_info_instance {
+          id
           name
           starter_id
           start_datetime
@@ -110,6 +113,11 @@ export const QueryWorkflowInfoNodeInstanceOperateByPk = gql`
       form_data_json
       state
       user_id
+      user {
+        id
+        username
+      }
+
       workflow_info_node_instance {
         id
         name

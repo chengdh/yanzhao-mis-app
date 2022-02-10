@@ -5,7 +5,7 @@
     </van-cell-group>
     <van-cell-group inset title="流程" style="margin-top: 10px">
       <van-steps direction="vertical" v-if="workflowInfoInstance">
-        <van-step>
+        <!-- <van-step>
           <van-cell
             center
             title="发起"
@@ -13,18 +13,16 @@
             :value="workflowInfoInstance.start_datetime | moment('from')"
           />
         </van-step>
-
+ -->
         <van-step v-for="wfiNode in workflowInfoInstance.workflow_info_instance_nodes" :key="wfiNode.id">
-          <van-cell-group :title="wfiNode.name">
             <van-cell
               center
               v-for="op in wfiNode.workflow_info_node_instance_operates"
               :key="op.id"
-              :title="op.user.username"
-              :label="op.state"
+              :title="wfiNode.name"
+              :label="op.user.username"
               :value="op.audit_date | moment('from')"
             />
-          </van-cell-group>
         </van-step>
       </van-steps>
     </van-cell-group>

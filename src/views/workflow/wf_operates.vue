@@ -54,7 +54,7 @@ export default {
       //已处理
       operates: [],
       search_kw: '',
-      finished: true,
+      finished: false,
       loading: false,
       refreshing: false,
       //分页

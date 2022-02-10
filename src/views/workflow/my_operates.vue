@@ -49,6 +49,7 @@ export default {
             limit: $limit
             where: { state: { _in: $states }, user_id: { _eq: $user_id } }
           ) {
+            workflow_info_instance_id
             workflow_info_instance {
               id
               name
@@ -61,11 +62,29 @@ export default {
             }
             workflow_info_node_instance_operate {
               id
+              audit_date
+              audit_note
+              created_at
               form_data_json
               state
+              user_id
               user {
                 id
                 username
+              }
+
+              workflow_info_node_instance {
+                id
+                name
+                workflow_info_instance {
+                  id
+                  name
+                  start_datetime
+                  starter {
+                    id
+                    username
+                  }
+                }
               }
             }
           }
