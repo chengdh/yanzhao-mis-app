@@ -7,7 +7,7 @@
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
       <van-list
         v-model="loading"
-        :immediate-check="false"
+        :immediate-check="true"
         :finished="finished"
         finished-text="没有更多了"
         @load="onLoad"
@@ -175,7 +175,7 @@ export default {
             this.loading = false
             this.operateList = [...this.operateList, ...newList]
           } else {
-            this.finished = true
+            this.finished = true 
             this.loading = false
           }
         }
