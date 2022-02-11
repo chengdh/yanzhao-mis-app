@@ -9,6 +9,7 @@ export const QuerMyOperates = gql`
         user_id: { _eq: $user_id }
         workflow_info_node_instance: { workflow_info_node: { node_type: { _nin: ["start", "end", "condition"] } } }
       }
+      order_by : {created_at: desc}
       offset: $offset
       limit: $limit
     ) {
@@ -54,6 +55,7 @@ export const QuerMySubmitted = gql`
   query MySubmitted($starter_id: bigint!, $states: [String!], $offset: Int! = 0, $limit: Int! = 15) {
     mySubmitted: yws_workflow_info_instances(
       where: { state: { _in: $states }, starter_id: { _eq: $starter_id } }
+      order_by : {created_at: desc}
       offset: $offset
       limit: $limit
     ) {
@@ -79,6 +81,7 @@ export const QuerMyReceived = gql`
   query myReceived($user_id: bigint!, $state: String!) {
     myReceived: yws_workflow_info_node_instance_operates(
       where: { state: { _eq: $state }, user_id: { _eq: $user_id } }
+      order_by : {created_at: desc}
     ) {
       audit_date
       audit_note
