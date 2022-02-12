@@ -4,7 +4,7 @@
       <div id="fb_editor" ref="fb_editor"></div>
     </van-cell-group>
     <van-cell-group inset title="流程" style="margin-top: 10px">
-      <van-steps direction="vertical" v-if="workflowInfoInstance">
+      <van-steps direction="vertical" v-if="workflowInfoInstance" active=99>
         <van-step v-for="wfiNode in workflowInfoInstance.workflow_info_instance_nodes" :key="wfiNode.id">
             <van-cell
               center
