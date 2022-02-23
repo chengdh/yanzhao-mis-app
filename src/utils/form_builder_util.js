@@ -13,9 +13,12 @@ export function formJsonFieldsFormat(jsonString, fieldCount = 3) {
   let jsonArray = JSON.parse(jsonString)
   let ret = []
   for (let i = 0; i < fieldCount; i++) {
-    let label = jsonArray[i].label
-    let val = jsonArray[i].userData[0]
-    ret.push({ label, val })
+    let input = jsonArray[i]
+    if (input.label && input.userData) {
+      let label = jsonArray[i].label
+      let val = jsonArray[i].userData[0]
+      ret.push({ label, val })
+    }
   }
   return ret
 }

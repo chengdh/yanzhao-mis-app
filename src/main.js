@@ -29,8 +29,8 @@ const apolloProvider = new VueApollo({
   defaultClient: apolloClient
 })
 Vue.use(VueApollo)
-// const vconsole = new VConsole()
-// Vue.use(vconsole)
+const vconsole = new VConsole()
+Vue.use(vconsole)
 const moment = require('moment')
 require('moment/locale/zh-cn')
 

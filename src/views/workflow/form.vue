@@ -30,6 +30,7 @@ require('formBuilder')
 require('formBuilder/dist/form-render.min.js')
 require('@/form_builder/num2rmb.js')
 require('@/form_builder/file_uploader.js')
+require('@/form_builder/departmentSelect.js')
 
 export default {
   name: 'Form',
