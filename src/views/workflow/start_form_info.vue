@@ -47,6 +47,7 @@ require('formBuilder')
 require('formBuilder/dist/form-render.min.js')
 require('@/form_builder/num2rmb.js')
 require('@/form_builder/file_uploader.js')
+require('@/form_builder/departmentSelect.js')
 
 import QueryFormInfoByPk from '@/graphql/queries/query_form_info_by_pk'
 import QueryOrgs from '@/graphql/queries/query_orgs'
