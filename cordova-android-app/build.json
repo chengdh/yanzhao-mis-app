@@ -1,0 +1,10 @@
+{
+  "android": {
+    "release": {
+      "keystore": "./android-keystore/il-yanzhao-app-key.keystore",
+      "alias": "il-yanzhao-app",
+      "storePassword": "yesnoyesno",
+      "password": "yesnoyesno"
+    }
+  }
+}

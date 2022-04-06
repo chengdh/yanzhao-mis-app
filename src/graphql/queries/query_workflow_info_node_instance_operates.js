@@ -7,9 +7,11 @@ export const QuerMyOperates = gql`
       where: {
         state: { _in: $states }
         user_id: { _eq: $user_id }
-        workflow_info_node_instance: { workflow_info_node: { node_type: { _nin: ["start", "end", "condition"] } } }
+        workflow_info_node_instance: {
+          workflow_info_node: { node_type: { _nin: ["start", "end", "condition", "copy_to"] } }
+        }
       }
-      order_by : {created_at: desc}
+      order_by: { created_at: desc }
       offset: $offset
       limit: $limit
     ) {
@@ -55,7 +57,7 @@ export const QuerMySubmitted = gql`
   query MySubmitted($starter_id: bigint!, $states: [String!], $offset: Int! = 0, $limit: Int! = 15) {
     mySubmitted: yws_workflow_info_instances(
       where: { state: { _in: $states }, starter_id: { _eq: $starter_id } }
-      order_by : {created_at: desc}
+      order_by: { created_at: desc }
       offset: $offset
       limit: $limit
     ) {
@@ -78,28 +80,48 @@ export const QuerMySubmitted = gql`
 //我收到的-指的是抄送给我的
 //TODO
 export const QuerMyReceived = gql`
-  query myReceived($user_id: bigint!, $state: String!) {
+  query myReceived($user_id: bigint!, $states: [String!], $offset: Int! = 0, $limit: Int! = 15) {
     myReceived: yws_workflow_info_node_instance_operates(
-      where: { state: { _eq: $state }, user_id: { _eq: $user_id } }
-      order_by : {created_at: desc}
+      where: {
+        state: { _in: $states }
+        user_id: { _eq: $user_id }
+        workflow_info_node_instance: { workflow_info_node: { node_type: { _in: ["copy_to"] } } }
+      }
+      order_by: { created_at: desc }
+      offset: $offset
+      limit: $limit
     ) {
+      id
       audit_date
       audit_note
       created_at
       form_data_json
-      id
       state
       user_id
       workflow_info_node_instance {
         id
         name
+        workflow_info_node {
+          id
+          name
+          node_type
+          audit_type
+          audit_mode
+        }
         workflow_info_instance {
           id
           name
-          starter_id
           start_datetime
+          state
+          form_data_json
+          note
           starter {
+            id
             username
+          }
+          workflow_info {
+            id
+            name
           }
         }
       }
