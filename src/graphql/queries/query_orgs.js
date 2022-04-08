@@ -17,3 +17,19 @@ export default gql`
     }
   }
 `
+export const getUserHeader = gql`
+  query getUserHeader($id: bigint!) {
+    userHeader: yws_users_by_pk(id: $id) {
+      id
+      username
+      org {
+        name
+        id
+        header {
+          id
+          username
+        }
+      }
+    }
+  }
+`

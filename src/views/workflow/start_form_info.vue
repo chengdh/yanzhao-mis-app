@@ -52,6 +52,7 @@ require('@/form_builder/departmentSelect.js')
 import QueryFormInfoByPk from '@/graphql/queries/query_form_info_by_pk'
 import QueryOrgs from '@/graphql/queries/query_orgs'
 import QueryUsers from '@/graphql/queries/query_users'
+import { getUserHeader } from '@/graphql/queries/query_orgs'
 import CreateWorkflowInfoInstance from '@/graphql/mutation/create_workflow_info_instance'
 import gql from 'graphql-tag'
 import { Toast, Notify } from 'vant'
@@ -76,6 +77,14 @@ export default {
     },
     orgs: {
       query: QueryOrgs
+    },
+    userHeader: {
+      query: getUserHeader,
+      variables() {
+        return {
+          id: JSON.parse(localStorage.getItem('CURRENT_USER')).id
+        }
+      }
     }
   },
   components: {},
@@ -84,6 +93,7 @@ export default {
       //表单信息
       formInfo: null,
       orgs: null,
+      userHeader: null,
 
       //已选择的用户信息,nodeId => userId
       selectedUserIds: {},
@@ -149,6 +159,11 @@ export default {
       for (const node_role of node.workflow_info_node_roles) {
         const users_role = node_role.role_oa.role_oa_users.map(roa_u => roa_u.user)
         users = [...users, ...users_role]
+      }
+      //TODO: 直接主管审批
+      if (node.node_type === 'audit' && node.audit_type === 'department_leader_1_level') {
+        //查找部门主管
+        if (this.userHeader) users = [this.userHeader.org.header]
       }
       return users
     },
