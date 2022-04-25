@@ -67,7 +67,6 @@ window.fbControls.push(function (controlClass) {
           .replace(/^元零?|零分/g, '')
           .replace(/元$/g, '元整')
       }
-
       if (this.config.userData) {
         var num_rmb = this.config.userData[0]
         var rmb_dx = rmb(num_rmb)
@@ -82,6 +81,14 @@ window.fbControls.push(function (controlClass) {
             jQuery(_this.dom).find('.rmb-dx').html(rmb_dx)
           })
       }
+      var _this = this
+      jQuery(_this.dom)
+        .find('.input-rmb')
+        .on('change', function () {
+          var num_rmb = jQuery(_this.dom).find('.input-rmb').val()
+          var rmb_dx = rmb(num_rmb)
+          jQuery(_this.dom).find('.rmb-dx').html(rmb_dx)
+        })
     }
   }
 

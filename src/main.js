@@ -10,7 +10,7 @@ import router from './router'
 import store from './store'
 
 // 设置 js中可以访问 $cdn
-import { $cdn, baseApi } from '@/config'
+import { $cdn } from '@/config'
 import VueApollo from 'vue-apollo'
 import apolloClient from '@/apollo_client'
 

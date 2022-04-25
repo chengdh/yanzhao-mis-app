@@ -53,13 +53,13 @@ module.exports = {
     }
     // proxy: {
     //   //配置跨域
-    //   '/api': {
-    //       target: "https://test.xxx.com",
-    //       // ws:true,
-    //       changOrigin:true,
-    //       pathRewrite:{
-    //           '^/api':'/'
-    //       }
+    //   '/file_uploads': {
+    //     target: 'http://yanzhao-mis-web:3000',
+    //     // ws:true,
+    //     changOrigin: true,
+    //     pathRewrite: {
+    //       '^/file_uploads': '/'
+    //     }
     //   }
     // }
   },

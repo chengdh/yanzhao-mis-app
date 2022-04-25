@@ -4,6 +4,9 @@
     <van-cell-group inset id="form_wrapper" style="margin-top: 10px; padding: 10px">
       <div id="fb_editor" ref="fb_editor"></div>
     </van-cell-group>
+    <van-cell-group inset title="附件" style="margin-top: 10px; padding: 10px">
+      <van-uploader multiple v-model="fileList" />
+    </van-cell-group>
     <van-cell-group inset title="流程" id="user_list" style="margin-top: 10px">
       <van-steps direction="vertical" v-if="formInfo">
         <van-step v-for="node in formInfo.workflow_infos[0].workflow_info_nodes" :key="node.id">
@@ -54,6 +57,7 @@ import QueryOrgs from '@/graphql/queries/query_orgs'
 import QueryUsers from '@/graphql/queries/query_users'
 import { getUserHeader } from '@/graphql/queries/query_orgs'
 import CreateWorkflowInfoInstance from '@/graphql/mutation/create_workflow_info_instance'
+import { uploadFiles } from '@/api/file_upload'
 import gql from 'graphql-tag'
 import { Toast, Notify } from 'vant'
 import moment from 'moment'
@@ -94,7 +98,7 @@ export default {
       formInfo: null,
       orgs: null,
       userHeader: null,
-
+      fileList: [],
       //已选择的用户信息,nodeId => userId
       selectedUserIds: {},
       selectedUsers: {},
@@ -233,13 +237,17 @@ export default {
               }
             })
             .then(data => {
-              console.log(data)
-              Notify({ type: 'success', message: `提交${this.title}成功!` })
-              this.$router.push({ name: 'Home' })
+              //上传附件
+              const retData = JSON.parse(data.data.call_kw.result)
+              const files = this.fileList.map(f => f.file)
+              uploadFiles(retData.id, 'WorkflowInfoInstance', files).then(data => {
+                Notify({ type: 'success', message: `提交${this.title}成功!` })
+                this.$router.push({ name: 'Home' })
+              })
             })
         })
     },
-    getWorkflowInfoInstanceObject: function () {
+    getWorkflowInfoInstanceObject() {
       const wfInfo = this.formInfo.workflow_infos[0]
       const wfiUsersData = []
       for (const [nId, uIds] of Object.entries(this.selectedUserIds)) {
