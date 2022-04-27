@@ -1,7 +1,7 @@
 <template>
   <div>
-    <van-cell-group inset id="form_wrapper" style="margin-top: 10px; padding: 10px">
-      <div id="form_render" ref="fb_editor" data-departments='[{label: "test",value: "test"}]'></div>
+    <van-cell-group inset id="form_wrapper" style="margin-top: 10px; padding: 10px" v-if="orgs">
+      <div id="form_render" ref="fb_editor" :data-departments="JSON.stringify(orgs)"></div>
     </van-cell-group>
     <van-cell-group inset title="附件" style="margin-top: 10px; padding: 10px">
       <van-image v-for="(f, i) in fileListOrigin" :key="i" :src="f">
@@ -33,6 +33,7 @@ window.jQuery = $
 window.$ = $
 
 import { QueryWorkflowInfoInstanceByPk } from '@/graphql/queries/query_workflow_info_instance_by_pk'
+import QueryOrgs from '@/graphql/queries/query_orgs'
 import { getUploadFiles } from '@/api/file_upload'
 import { baseURL } from '@/config'
 require('jquery-ui-sortable')
@@ -69,6 +70,9 @@ export default {
           id: this.workflowInfoInstanceId
         }
       }
+    },
+    orgs: {
+      query: QueryOrgs
     }
   },
   methods: {},

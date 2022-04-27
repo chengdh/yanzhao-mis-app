@@ -4,27 +4,6 @@
 
 // configure the class for runtime loading
 if (!window.fbControls) window.fbControls = []
-var options = null
-function getDepartments() {
-  const getDepartmentDataUrl = '/api/v1/dataset/search_read'
-  return jQuery
-    .post(getDepartmentDataUrl, {
-      'input[arg]': {
-        model: 'Department',
-        fields: ['id', 'name'],
-        domain: {
-          is_active_eq: true
-        },
-        sort: 'order_by ASC'
-      }
-    })
-    .then(function (data) {
-      var orgs = JSON.parse(data.result)
-      options = orgs.map(function (o) {
-        return { label: o.name, value: o.id }
-      })
-    })
-}
 window.fbControls.push(function (controlClass, allControlClasses) {
   const controlSelect = allControlClasses.select
 
