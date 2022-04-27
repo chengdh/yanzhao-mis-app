@@ -1,7 +1,7 @@
 <template>
   <div>
     <van-cell-group inset id="form_wrapper" style="margin-top: 10px; padding: 10px">
-      <div id="fb_editor" ref="fb_editor"></div>
+      <div id="form_render" ref="fb_editor" data-departments='[{label: "test",value: "test"}]'></div>
     </van-cell-group>
     <van-cell-group inset title="附件" style="margin-top: 10px; padding: 10px">
       <van-image v-for="(f, i) in fileListOrigin" :key="i" :src="f">
@@ -12,11 +12,13 @@
     <van-cell-group inset title="流程" style="margin-top: 10px">
       <van-steps direction="vertical" v-if="workflowInfoInstance" active="99">
         <van-step v-for="wfiNode in workflowInfoInstance.workflow_info_instance_nodes" :key="wfiNode.id">
+          <van-cell center :title="wfiNode.name" />
+
           <van-cell
             center
             v-for="op in wfiNode.workflow_info_node_instance_operates"
             :key="op.id"
-            :title="wfiNode.name"
+            title=""
             :label="op.user.username"
             :value="op.audit_date | moment('from')"
           />
@@ -37,8 +39,7 @@ require('jquery-ui-sortable')
 require('formBuilder')
 require('formBuilder/dist/form-render.min.js')
 require('@/form_builder/num2rmb.js')
-require('@/form_builder/file_uploader.js')
-require('@/form_builder/departmentSelect.js')
+require('@/form_builder/select.department.js')
 
 export default {
   name: 'Form',

@@ -175,7 +175,7 @@ export default {
             this.loading = false
             this.operateList = [...this.operateList, ...newList]
           } else {
-            this.finished = true 
+            this.finished = true
             this.loading = false
           }
         }

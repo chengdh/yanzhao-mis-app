@@ -1,8 +1,8 @@
 <template>
   <div style="display: flex; flex-direction: column">
     <van-nav-bar :title="title" left-text="返回" left-arrow @click-left="() => this.$router.back(-1)" />
-    <van-cell-group inset id="form_wrapper" style="margin-top: 10px; padding: 10px">
-      <div id="fb_editor" ref="fb_editor"></div>
+    <van-cell-group inset id="form_wrapper" style="margin-top: 10px; padding: 10px" v-if="orgs">
+      <div id="form_render" ref="fb_editor" :data-departments="JSON.stringify(orgs)"></div>
     </van-cell-group>
     <van-cell-group inset title="附件" style="margin-top: 10px; padding: 10px">
       <van-uploader multiple v-model="fileList" />
@@ -49,8 +49,7 @@ require('jquery-ui-sortable')
 require('formBuilder')
 require('formBuilder/dist/form-render.min.js')
 require('@/form_builder/num2rmb.js')
-require('@/form_builder/file_uploader.js')
-require('@/form_builder/departmentSelect.js')
+require('@/form_builder/select.department.js')
 
 import QueryFormInfoByPk from '@/graphql/queries/query_form_info_by_pk'
 import QueryOrgs from '@/graphql/queries/query_orgs'
@@ -240,7 +239,7 @@ export default {
               //上传附件
               const retData = JSON.parse(data.data.call_kw.result)
               const files = this.fileList.map(f => f.file)
-              uploadFiles(retData.id, 'WorkflowInfoInstance', files).then(data => {
+              uploadFiles(retData.workflow_info_instance_id, 'WorkflowInfoInstance', files).then(data => {
                 Notify({ type: 'success', message: `提交${this.title}成功!` })
                 this.$router.push({ name: 'Home' })
               })

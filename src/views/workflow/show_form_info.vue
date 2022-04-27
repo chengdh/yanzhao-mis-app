@@ -13,7 +13,7 @@ require('jquery-ui-sortable')
 require('formBuilder')
 require('formBuilder/dist/form-render.min.js')
 require('@/form_builder/num2rmb.js')
-require('@/form_builder/departmentSelect.js')
+require('@/form_builder/select.department.js')
 // require('@/form_builder/van_file_uploader.js')
 
 import gql from 'graphql-tag'
