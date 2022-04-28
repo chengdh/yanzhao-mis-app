@@ -4,7 +4,7 @@ module.exports = {
   // baseURL: 'http://localhost:5001',
   // baseApi: 'http://localhost:18080/v1/graphql',
 
-  baseUrl: 'http://bg.kairuiwuliu.com',
+  baseURL: 'http://bg.kairuiwuliu.com',
   baseApi: 'http://bg.kairuiwuliu.com:18080/v1/graphql',
 
   APPID: 'xxx',

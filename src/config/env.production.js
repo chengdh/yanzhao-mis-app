@@ -1,7 +1,7 @@
 // 正式
 module.exports = {
   title: '综合办公平台',
-  baseURL: 'http://bg.kairuiwuliu.com:9018',
+  baseURL: 'http://bg.kairuiwuliu.com',
   baseApi: 'http://bg.kairuiwuliu.com:18080/v1/graphql',
   APPID: 'xxx',
   APPSECRET: 'xxx',
