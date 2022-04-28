@@ -12,7 +12,7 @@
         <van-step v-for="node in formInfo.workflow_infos[0].workflow_info_nodes" :key="node.id">
           <van-cell center :title="nodeTitle(node)" :label="nodeDescribe(node)" :value="nodeAuditUsersString(node)">
             <template #default>
-              <van-icon v-for="u in nodeAuditUsers(node)" :key="u.id" size="small" name="manager-o">
+              <van-icon v-for="(u, i) in nodeAuditUsers(node)" :key="`${u.id}_${i}`" size="small" name="manager-o">
                 {{ u.username }}
               </van-icon>
               <div v-if="node.audit_type == 'beginner_select' || node.node_type == 'copy_to'">
@@ -166,15 +166,17 @@ export default {
       //TODO: 直接主管审批
       if (node.node_type === 'audit' && node.audit_type === 'department_leader_1_level') {
         //查找部门主管
-        if (this.userHeader) users = [this.userHeader.org.header]
+        if (this.userHeader) {
+          const header = this.userHeader.org.header
+          if (header) users = [header]
+        }
       }
       return users
     },
     nodeAuditUsersString(node) {
       const users = this.nodeAuditUsers(node)
-        .map(u => u.username)
-        .join(',')
-      return users
+      const ret = users.map(u => u.username).join(',')
+      return ret
     },
     //弹出的用户选择窗口
     onPopupSelectUser(node) {
