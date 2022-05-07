@@ -9,7 +9,7 @@ export default gql`
         id
         name
         note
-        workflow_info_nodes(where: { node_type: { _nin: ["start", "end", "condition"] } }) {
+        workflow_info_nodes(order_by: { sort_by: asc }, where: { node_type: { _nin: ["start", "end", "condition"] } }) {
           id
           name
           node_type
