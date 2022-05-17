@@ -57,7 +57,7 @@ export const QuerMySubmitted = gql`
   query MySubmitted($starter_id: bigint!, $states: [String!], $offset: Int! = 0, $limit: Int! = 15) {
     mySubmitted: yws_workflow_info_instances(
       where: { state: { _in: $states }, starter_id: { _eq: $starter_id } }
-      order_by: { created_at: desc }
+      order_by: { id: desc }
       offset: $offset
       limit: $limit
     ) {
@@ -78,7 +78,6 @@ export const QuerMySubmitted = gql`
   }
 `
 //我收到的-指的是抄送给我的
-//TODO
 export const QuerMyReceived = gql`
   query myReceived($user_id: bigint!, $states: [String!], $offset: Int! = 0, $limit: Int! = 15) {
     myReceived: yws_workflow_info_node_instance_operates(
