@@ -260,6 +260,23 @@ export default {
           }
         })
       }
+
+      //处理直接主管审批
+      const headerAuditNodes = this.formInfo.workflow_infos[0].workflow_info_nodes.filter(
+        node => node.node_type === 'audit' && node.audit_type === 'department_leader_1_level'
+      )
+
+      for (const n of headerAuditNodes) {
+        if (this.userHeader) {
+          const header = this.userHeader.org.header
+          wfiUsersData.push({
+            workflow_info_node_id: n.id,
+            workflow_info_instance_user_lines: {
+              data: [{ user_id: header.id }]
+            }
+          })
+        }
+      }
       const object = {
         workflow_info_id: wfInfo.id,
         name: this.formInfo.name,
