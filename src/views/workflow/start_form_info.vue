@@ -9,7 +9,7 @@
     </van-cell-group>
     <van-cell-group inset title="流程" id="user_list" style="margin-top: 10px">
       <van-steps direction="vertical" v-if="formInfo">
-        <van-step v-for="node in formInfo.workflow_infos[0].workflow_info_nodes" :key="node.id">
+        <van-step v-for="node in execNodes" :key="node.id">
           <van-cell center :title="nodeTitle(node)" :label="nodeDescribe(node)" :value="nodeAuditUsersString(node)">
             <template #default>
               <van-icon v-for="(u, i) in nodeAuditUsers(node)" :key="`${u.id}_${i}`" size="small" name="manager-o">
@@ -52,6 +52,7 @@ require('@/form_builder/num2rmb.js')
 require('@/form_builder/select.department.js')
 
 import QueryFormInfoByPk from '@/graphql/queries/query_form_info_by_pk'
+import { GetWfExecNodes, GetWfNodeByPk } from '@/graphql/queries/get_workflow_instance_exec_nodes'
 import QueryOrgs from '@/graphql/queries/query_orgs'
 import QueryUsers from '@/graphql/queries/query_users'
 import { getUserHeader } from '@/graphql/queries/query_orgs'
@@ -95,6 +96,8 @@ export default {
     return {
       //表单信息
       formInfo: null,
+      execNodes: [],
+      result: null,
       orgs: null,
       userHeader: null,
       fileList: [],
@@ -110,6 +113,39 @@ export default {
     }
   },
   methods: {
+    //获取工作流执行节点
+    get_exec_nodes() {
+      let self = this
+      const userId = JSON.parse(localStorage.getItem('CURRENT_USER')).id
+      this.$apollo
+        .mutate({
+          mutation: GetWfExecNodes,
+          variables: {
+            formInfoId: this.formInfoId + '',
+            userId: userId + ''
+          }
+        })
+        .then(resp => {
+          const nodes = JSON.parse(resp.data.call_kw.result)
+          return nodes
+          // this.execNodes = JSON.parse(resp.data.call_kw.result)
+        })
+        .then(nodes => {
+          for (const n of nodes) {
+            self.$apollo
+              .query({
+                query: GetWfNodeByPk,
+                variables: {
+                  id: n.id
+                }
+              })
+              .then(resp => {
+                const node = resp.data.node
+                self.execNodes.push(node)
+              })
+          }
+        })
+    },
     //节点类型描述
     nodeTypeDes(node) {
       let nodeTypeDes = null
@@ -158,6 +194,7 @@ export default {
     //节点审批用户
     nodeAuditUsers(node) {
       const node_users = node.workflow_info_node_users
+
       let users = node_users.map(nu => nu.user)
       for (const node_role of node.workflow_info_node_roles) {
         const users_role = node_role.role_oa.role_oa_users.map(roa_u => roa_u.user)
@@ -348,7 +385,9 @@ export default {
       return ret
     }
   },
-  created() {},
+  created() {
+    this.get_exec_nodes()
+  },
   mounted() {}
 }
 </script>
