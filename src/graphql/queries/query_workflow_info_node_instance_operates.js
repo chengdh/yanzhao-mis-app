@@ -145,10 +145,12 @@ export const QueryWorkflowInfoNodeInstanceOperateByPk = gql`
       workflow_info_node_instance {
         id
         name
+        state
         workflow_info_instance {
           id
           name
           start_datetime
+          state
           starter {
             id
             username

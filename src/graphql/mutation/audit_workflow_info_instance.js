@@ -14,3 +14,17 @@ export const RejectWorkflowInfoNodeInstanceOperate = gql`
     }
   }
 `
+export const CancelWorkflowInfoInstance = gql`
+  mutation cancelWorkflowInfoInstance($id: Int!) {
+    call_kw(arg: { method: "cancel", model: "workflow_info_instance", id: $id}) {
+      result
+    }
+  }
+`
+export const ReSubmitWorkflowInfoInstance = gql`
+  mutation reSubmitWorkflowInfoInstance($id: Int!) {
+    call_kw(arg: { method: "re_submit", model: "workflow_info_instance", id: $id}) {
+      result
+    }
+  }
+`

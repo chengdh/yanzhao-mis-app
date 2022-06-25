@@ -10,13 +10,19 @@ export const QueryWorkflowInfoInstanceByPk = gql`
       name
       note
       state
+      starter_id
       starter {
         id
         username
       }
+      workflow_info {
+        id
+        form_info_id
+      }
       workflow_info_instance_nodes(order_by: {created_at : asc }) {
         id
         name
+        state
         workflow_info_node_instance_operates(order_by: {updated_at : asc }) {
           audit_date
           audit_note

@@ -17,12 +17,11 @@
         @load="onLoad"
       >
         <van-cell-group inset :key="operate.id" v-for="operate in operates">
-          <van-cell
-            :title="operateTitle(operate)"
-            :value="operate.start_datetime | moment('from')"
-            @click="evt => onClick(operate)"
-            is-link
-          >
+          <van-cell :value="operate.start_datetime | moment('from')" @click="evt => onClick(operate)" is-link>
+            <template #title>
+              <span class="custom-title">{{ operateTitle(operate) }}</span>
+              <van-tag type="primary" mark>{{ operateState(operate) }}</van-tag>
+            </template>
             <template #label>
               <div class="van-ellipsis" :key="i" v-for="(f, i) in formatJson(operate.form_data_json)">
                 {{ f.label }}:{{ f.val }}
@@ -110,6 +109,15 @@ export default {
     operateTitle(operate) {
       return `${operate.starter.username}提交的${operate.workflow_info && operate.workflow_info.name}`
     },
+    operateState(op) {
+      let stateDes = ''
+      let state = op.state
+      if (state === 'draft') stateDes = '待处理'
+      if (state === 'processing') stateDes = '处理中'
+      if (state === 'canceled') stateDes = '已撤销'
+      if (state === 'rejected') stateDes = '已拒绝'
+      return stateDes
+    },
     formatJson(formJson) {
       let jsonArray = formJsonFieldsFormat(formJson)
       return jsonArray
@@ -179,7 +187,7 @@ export default {
                 offset: this.offset,
                 limit: this.limit,
 
-                states: ['done', 'rejected', 'draft', 'processing'],
+                states: ['done', 'rejected', 'draft', 'processing', 'canceled'],
                 starter_id: JSON.parse(localStorage.getItem('CURRENT_USER')).id
               },
               fetchPolicy: 'network-only'

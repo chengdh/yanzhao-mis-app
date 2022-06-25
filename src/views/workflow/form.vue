@@ -4,9 +4,17 @@
       <div id="form_render" ref="fb_editor" :data-departments="JSON.stringify(orgs)"></div>
     </van-cell-group>
     <van-cell-group inset title="附件" style="margin-top: 10px; padding: 10px">
-      <van-image v-for="(f, i) in fileListOrigin" :key="i" :src="f">
+      <!-- <van-image v-for="(f, i) in fileListOrigin" :key="i" :src="f">
         <template v-slot:error>加载失败</template>
-      </van-image>
+      </van-image> -->
+      <van-uploader
+        readonly
+        :deletable="false"
+        :show-upload="false"
+        @click-preview="filePreview"
+        v-model="fileListOrigin"
+        multiple
+      />
     </van-cell-group>
 
     <van-cell-group inset title="流程" style="margin-top: 10px">
@@ -25,6 +33,10 @@
         </van-step>
       </van-steps>
     </van-cell-group>
+    <van-cell-group inset id="footer" style="margin-top: 10px; padding: 10px">
+      <van-button type="danger" @click="onCancel" size="small" block round v-if="can_cancel">撤销</van-button>
+      <van-button type="info" @click="onReSubmit" size="small" block round v-if="can_re_submit">重新发起</van-button>
+    </van-cell-group>
   </div>
 </template>
 <script>
@@ -33,9 +45,14 @@ window.jQuery = $
 window.$ = $
 
 import { QueryWorkflowInfoInstanceByPk } from '@/graphql/queries/query_workflow_info_instance_by_pk'
+import {
+  CancelWorkflowInfoInstance,
+  ReSubmitWorkflowInfoInstance
+} from '@/graphql/mutation/audit_workflow_info_instance'
 import QueryOrgs from '@/graphql/queries/query_orgs'
 import { getUploadFiles } from '@/api/file_upload'
 import { baseURL } from '@/config'
+import { Notify } from 'vant'
 require('jquery-ui-sortable')
 require('formBuilder')
 require('formBuilder/dist/form-render.min.js')
@@ -75,28 +92,80 @@ export default {
       query: QueryOrgs
     }
   },
-  methods: {},
+  methods: {
+    filePreview(file) {
+      console.log(file)
+    },
+    onCancel() {
+      this.$apollo
+        .mutate({
+          mutation: CancelWorkflowInfoInstance,
+          variables: {
+            id: this.workflowInfoInstanceId
+          }
+        })
+        .then(resp => {
+          console.log('cancel')
+          console.log(resp)
+          Notify({ type: 'success', message: `撤销表单成功!` })
+          this.$router.push({ name: 'Home' })
+        })
+    },
+    onReSubmit() {
+      this.$router.push({
+        name: 'StartFormInfo',
+        query: {
+          refWorkflowInfoInstanceId: this.workflowInfoInstanceId,
+          formInfoId: this.workflowInfoInstance.workflow_info.form_info_id
+        }
+      })
+    }
+  },
   watch: {
     workflowInfoInstance: function () {
       let formRenderOpts = {
         formData: this.workflowInfoInstance.form_data_json,
         dataType: 'json'
       }
-      this.formRenderInstance = $(this.$refs.fb_editor).formRender(formRenderOpts)
+      if (this.workflowInfoInstance) {
+        this.formRenderInstance = $(this.$refs.fb_editor).formRender(formRenderOpts)
+      }
       $(this.$refs.fb_editor).find('input').attr('disabled', this.readonly)
       $(this.$refs.fb_editor).find('textarea').attr('disabled', this.readonly)
       $(this.$refs.fb_editor).find('select').attr('disabled', this.readonly)
       //获取附件
       const _this = this
       getUploadFiles(this.workflowInfoInstanceId, 'WorkflowInfoInstance').then(data => {
-        _this.fileListThumb = data.result.thumb.map(f => `${baseURL}/${f}`)
-        _this.fileListOrigin = data.result.origin.map(f => `${baseURL}/${f}`)
+        _this.fileListThumb = data.result.thumb.map(f => {
+          return { url: `${baseURL}/${f}` }
+        })
+        _this.fileListOrigin = data.result.origin.map(f => {
+          return { url: `${baseURL}/${f}` }
+        })
       })
     }
   },
   computed: {
     title: function () {
       return (this.workflowInfoInstance && this.workflowInfoInstance.name) || ''
+    },
+    can_cancel: function () {
+      if (!this.workflowInfoInstance) return false
+      const userId = JSON.parse(localStorage.getItem('CURRENT_USER')).id
+      const doneNodes = this.workflowInfoInstance.workflow_info_instance_nodes.filter(ni => ni.state === 'done')
+      return (
+        userId === this.workflowInfoInstance.starter_id &&
+        this.workflowInfoInstance.state === 'processing' &&
+        doneNodes.length === 1
+      )
+    },
+    can_re_submit: function () {
+      if (!this.workflowInfoInstance) return false
+      const userId = JSON.parse(localStorage.getItem('CURRENT_USER')).id
+      return (
+        userId === this.workflowInfoInstance.starter_id &&
+        (this.workflowInfoInstance.state === 'canceled' || this.workflowInfoInstance.state === 'rejected')
+      )
     }
   },
   created() {},

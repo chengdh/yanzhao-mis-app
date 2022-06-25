@@ -5,7 +5,7 @@
       <div id="form_render" ref="fb_editor" :data-departments="JSON.stringify(orgs)"></div>
     </van-cell-group>
     <van-cell-group inset title="附件" style="margin-top: 10px; padding: 10px">
-      <van-uploader multiple v-model="fileList" />
+      <van-uploader multiple v-model="fileList" accept=".doc,.docx,.xls,.xlsx,.pdf,image/*" />
     </van-cell-group>
     <van-cell-group inset title="流程" id="user_list" style="margin-top: 10px">
       <van-steps direction="vertical" v-if="formInfo">
@@ -53,6 +53,7 @@ require('@/form_builder/select.department.js')
 
 import QueryFormInfoByPk from '@/graphql/queries/query_form_info_by_pk'
 import { GetWfExecNodes, GetWfNodeByPk } from '@/graphql/queries/get_workflow_instance_exec_nodes'
+import { QueryWorkflowInfoInstanceByPk } from '@/graphql/queries/query_workflow_info_instance_by_pk'
 import QueryOrgs from '@/graphql/queries/query_orgs'
 import QueryUsers from '@/graphql/queries/query_users'
 import { getUserHeader } from '@/graphql/queries/query_orgs'
@@ -68,6 +69,10 @@ export default {
     formInfoId: {
       type: [String, Number],
       required: true
+    },
+    refWorkflowInfoInstanceId: {
+      type: [String, Number],
+      default: null
     }
   },
   apollo: {
@@ -359,7 +364,22 @@ export default {
           formData: this.formInfo.form_info_design.form_json,
           dataType: 'json'
         }
+
         this.formRenderInstance = $(this.$refs.fb_editor).formRender(formRenderOpts)
+        if (this.refWorkflowInfoInstanceId) {
+          this.$apollo
+            .query({
+              query: QueryWorkflowInfoInstanceByPk,
+              variables: {
+                id: this.refWorkflowInfoInstanceId
+              }
+            })
+            .then(resp => {
+              console.log(resp.data)
+              formRenderOpts.formData = resp.data.workflowInfoInstance.form_data_json
+              this.formRenderInstance = $(this.$refs.fb_editor).formRender(formRenderOpts)
+            })
+        }
       }
     }
   },

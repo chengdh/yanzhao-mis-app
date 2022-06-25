@@ -18,7 +18,7 @@ export const constantRouterMap = [
     path: '/workflow/start_form_info',
     name: 'StartFormInfo',
     component: () => import('@/views/workflow/start_form_info'),
-    props: route => ({ formInfoId: route.query.formInfoId }),
+    props: route => ({ formInfoId: route.query.formInfoId, refWorkflowInfoInstanceId: route.query.refWorkflowInfoInstanceId }),
     meta: { title: '提交表单', keepAlive: false }
   },
   //查看工作流
@@ -26,7 +26,7 @@ export const constantRouterMap = [
     path: '/workflow/show_form_info',
     name: 'ShowFormInfo',
     component: () => import('@/views/workflow/show_form_info'),
-    props: route => ({ workflowInfoInstanceId: route.query.workflowInfoInstanceId}),
+    props: route => ({ workflowInfoInstanceId: route.query.workflowInfoInstanceId }),
     meta: { title: '查看表单', keepAlive: false }
   },
 
@@ -35,7 +35,7 @@ export const constantRouterMap = [
     path: '/workflow/audit_form_info',
     name: 'AuditFormInfo',
     component: () => import('@/views/workflow/audit_form_info'),
-    props: route => ({ workflowInfoNodeInstanceOperateId: route.query.workflowInfoNodeInstanceOperateId}),
+    props: route => ({ workflowInfoNodeInstanceOperateId: route.query.workflowInfoNodeInstanceOperateId }),
     meta: { title: '审批表单', keepAlive: false }
   },
 
