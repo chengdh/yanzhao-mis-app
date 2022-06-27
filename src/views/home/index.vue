@@ -1,12 +1,13 @@
 <template>
   <div>
-    <van-nav-bar title="工作台" :fixed=true />
-    <van-cell-group inset style="margin-top:6em">
+    <van-nav-bar title="工作台" :fixed="true" />
+    <van-cell-group inset style="margin-top: 6em">
       <van-grid>
         <van-grid-item
           icon="underway-o"
           text="待处理"
           :to="{ name: 'GroupOperates', query: { queryType: 'myWaitting' } }"
+          :badge="waittingOperatesBadge"
         />
 
         <van-grid-item icon="success" text="已处理" :to="{ name: 'GroupOperates', query: { queryType: 'myDone' } }" />
@@ -31,7 +32,7 @@
           :key="formInfo.id"
           @click="startFormInfo(formInfo)"
           icon="photo-o"
-          style="width: 100%;overflow: hidden"
+          style="width: 100%; overflow: hidden"
         >
           <template #text>
             <span class="van-ellipsis">{{ formInfo.name }}</span>
@@ -73,10 +74,14 @@ export default {
     }
   },
   computed: {
-    nonBlankFormCategories: function(){
+    nonBlankFormCategories: function () {
       return this.formCategories.filter(fc => fc.form_infos.length > 0)
+    },
+    waittingOperatesBadge: function () {
+      let ret = this.$store.state.app.waittingOperates
+      if (ret === 0) ret = ''
+      return ret
     }
-
   },
   created() {},
   mounted() {},

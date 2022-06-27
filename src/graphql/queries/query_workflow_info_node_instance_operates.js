@@ -8,6 +8,7 @@ export const QuerMyOperates = gql`
         state: { _in: $states }
         user_id: { _eq: $user_id }
         workflow_info_node_instance: {
+          workflow_info_instance: {state: { _in: ["draft", "processing"] }}
           workflow_info_node: { node_type: { _nin: ["start", "end", "condition", "copy_to"] } }
         }
       }

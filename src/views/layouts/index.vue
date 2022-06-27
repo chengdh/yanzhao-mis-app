@@ -21,6 +21,7 @@ export default {
       tabbars: [
         {
           title: '消息',
+          key: 'waittingOperates',
           to: {
             name: 'MyOperates'
           },
@@ -28,6 +29,7 @@ export default {
         },
         {
           title: '工作台',
+          key: 'oaDesktop',
           to: {
             name: 'Home'
           },
@@ -36,6 +38,7 @@ export default {
 
         {
           title: '我的',
+          key: 'profile',
           to: {
             name: 'Profile'
           },

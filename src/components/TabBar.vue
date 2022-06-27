@@ -1,7 +1,13 @@
 <template>
   <div>
     <van-tabbar fixed route v-model="active" @change="handleChange">
-      <van-tabbar-item v-for="(item, index) in data" :to="item.to" :icon="item.icon" :key="index">
+      <van-tabbar-item
+        v-for="(item, index) in data"
+        :to="item.to"
+        :icon="item.icon"
+        :key="index"
+        :badge="getWaittingOperatesBadge(item.key)"
+      >
         {{ item.title }}
       </van-tabbar-item>
     </van-tabbar>
@@ -30,6 +36,13 @@ export default {
   methods: {
     handleChange(value) {
       this.$emit('change', value)
+    },
+    getWaittingOperatesBadge(itemKey) {
+      let ret = ''
+      if (itemKey === 'waittingOperates') {
+        ret = this.$store.state.app.waittingOperates
+      }
+      return ret
     }
   }
 }

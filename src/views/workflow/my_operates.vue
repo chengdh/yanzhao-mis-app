@@ -47,7 +47,11 @@ export default {
           operateList: yws_view_wokflow_info_instance_operate_joins(
             offset: $offset
             limit: $limit
-            where: { state: { _in: $states }, user_id: { _eq: $user_id } }
+            where: {
+              workflow_info_instance: { state: { _in: ["draft", "processing"] } }
+              state: { _in: $states }
+              user_id: { _eq: $user_id }
+            }
           ) {
             workflow_info_instance_id
             workflow_info_instance {
@@ -145,6 +149,11 @@ export default {
     }
   },
   created() {},
+  watch: {
+    operateList: function (val) {
+      this.$store.dispatch('setWaittingOperates', val.length)
+    }
+  },
   mounted() {},
   methods: {
     onClick(operate) {
