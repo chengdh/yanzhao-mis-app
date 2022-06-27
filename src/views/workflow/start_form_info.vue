@@ -283,10 +283,14 @@ export default {
               //上传附件
               const retData = JSON.parse(data.data.call_kw.result)
               const files = this.fileList.map(f => f.file)
-              uploadFiles(retData.workflow_info_instance_id, 'WorkflowInfoInstance', files).then(data => {
-                Notify({ type: 'success', message: `提交${this.title}成功!` })
-                this.$router.push({ name: 'Home' })
-              })
+              if (files.length > 0) {
+                uploadFiles(retData.workflow_info_instance_id, 'WorkflowInfoInstance', files).then(data => {})
+              }
+              return data
+            })
+            .then(data => {
+              Notify({ type: 'success', message: `提交${this.title}成功!` })
+              this.$router.push({ name: 'Home' })
             })
         })
     },

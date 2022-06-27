@@ -33,10 +33,6 @@
         </van-step>
       </van-steps>
     </van-cell-group>
-    <van-cell-group inset id="footer" style="margin-top: 10px; padding: 10px">
-      <van-button type="danger" @click="onCancel" size="small" block round v-if="can_cancel">撤销</van-button>
-      <van-button type="info" @click="onReSubmit" size="small" block round v-if="can_re_submit">重新发起</van-button>
-    </van-cell-group>
   </div>
 </template>
 <script>
@@ -45,14 +41,9 @@ window.jQuery = $
 window.$ = $
 
 import { QueryWorkflowInfoInstanceByPk } from '@/graphql/queries/query_workflow_info_instance_by_pk'
-import {
-  CancelWorkflowInfoInstance,
-  ReSubmitWorkflowInfoInstance
-} from '@/graphql/mutation/audit_workflow_info_instance'
 import QueryOrgs from '@/graphql/queries/query_orgs'
 import { getUploadFiles } from '@/api/file_upload'
 import { baseURL } from '@/config'
-import { Notify } from 'vant'
 require('jquery-ui-sortable')
 require('formBuilder')
 require('formBuilder/dist/form-render.min.js')
@@ -95,30 +86,6 @@ export default {
   methods: {
     filePreview(file) {
       console.log(file)
-    },
-    onCancel() {
-      this.$apollo
-        .mutate({
-          mutation: CancelWorkflowInfoInstance,
-          variables: {
-            id: this.workflowInfoInstanceId
-          }
-        })
-        .then(resp => {
-          console.log('cancel')
-          console.log(resp)
-          Notify({ type: 'success', message: `撤销表单成功!` })
-          this.$router.push({ name: 'Home' })
-        })
-    },
-    onReSubmit() {
-      this.$router.push({
-        name: 'StartFormInfo',
-        query: {
-          refWorkflowInfoInstanceId: this.workflowInfoInstanceId,
-          formInfoId: this.workflowInfoInstance.workflow_info.form_info_id
-        }
-      })
     }
   },
   watch: {
