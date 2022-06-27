@@ -21,6 +21,12 @@ query node($id: bigint!) {
       role_oa {
         id
         name
+        role_oa_users {
+          user {
+            id
+            username
+          }
+        }
       }
     }
     workflow_info_node_users {
