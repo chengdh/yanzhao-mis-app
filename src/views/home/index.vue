@@ -79,7 +79,7 @@ export default {
     },
     waittingOperatesBadge: function () {
       let ret = this.$store.state.app.waittingOperates
-      if (ret === 0) ret = ''
+      if (ret == 0) ret = ''
       return ret
     }
   },
