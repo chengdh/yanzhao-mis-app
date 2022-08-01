@@ -4,9 +4,67 @@
  */
 export const constantRouterMap = [
   {
+    path: '/partner/list',
+    name: 'PartnerList',
+    component: () => import('@/views/partner/list'),
+    meta: {
+      title: '合伙人日程',
+      keepAlive: false
+    }
+  },
+  {
+    path: '/partner/new',
+    name: 'PartnerNew',
+    component: () => import('@/views/partner/new'),
+    meta: {
+      title: '新建日程',
+      keepAlive: false
+    }
+  },
+
+  {
+    path: '/partner/edit',
+    name: 'PartnerEdit',
+    component: () => import('@/views/partner/edit'),
+    props: true,
+    meta: {
+      title: '维护日程',
+      keepAlive: false
+    }
+  },
+  {
+    path: '/developer/list',
+    name: 'DeveloperList',
+    component: () => import('@/views/developer/list'),
+    meta: {
+      title: '创业者人日程',
+      keepAlive: false
+    }
+  },
+  {
+    path: '/developer/new',
+    name: 'DeveloperNew',
+    component: () => import('@/views/developer/new'),
+    meta: {
+      title: '新建日程',
+      keepAlive: false
+    }
+  },
+
+  {
+    path: '/developer/edit',
+    name: 'DeveloperEdit',
+    component: () => import('@/views/developer/edit'),
+    props: true,
+    meta: {
+      title: '维护日程',
+      keepAlive: false
+    }
+  },
+  {
     path: '/login',
     name: 'Login',
-    component: () => import('@/views/login/login'),
+    component: () => import('@/views/login/login_for_code_test'),
     meta: {
       title: '登录',
       keepAlive: false

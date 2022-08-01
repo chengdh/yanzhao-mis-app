@@ -27,7 +27,10 @@ import {
   Divider,
   PullRefresh,
   Loading,
-  Tag
+  Tag,
+  RadioGroup,
+  Radio,
+  DatetimePicker
 } from 'vant'
 Vue.use(Button)
   .use(NavBar)
@@ -56,3 +59,6 @@ Vue.use(Button)
   .use(PullRefresh)
   .use(Loading)
   .use(Tag)
+  .use(Radio)
+  .use(RadioGroup)
+  .use(DatetimePicker)
