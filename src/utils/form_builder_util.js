@@ -1,5 +1,7 @@
 //处理form_builder数据的一些工具类
 export function formJsonFormat(jsonString, fieldNames = []) {
+  jsonString = jsonString.replace(/\n/g, '\\n')
+  jsonString = jsonString.replace(/\r/g, '\\r')
   let jsonArray = JSON.parse(jsonString)
   let ret = []
   for (let field of Object.entries(jsonArray)) {
@@ -10,6 +12,8 @@ export function formJsonFormat(jsonString, fieldNames = []) {
 
 //从formJson中提取前三个字段用于显示
 export function formJsonFieldsFormat(jsonString, fieldCount = 3) {
+  jsonString = jsonString.replace(/\n/g, '\\n')
+  jsonString = jsonString.replace(/\r/g, '\\r')
   let jsonArray = JSON.parse(jsonString)
   let ret = []
   for (let i = 0; i < fieldCount; i++) {
