@@ -1,6 +1,11 @@
 <template>
   <div>
-    <van-nav-bar :title="title" left-text="返回" left-arrow @click-left="() => this.$router.back(-1)" />
+    <van-nav-bar
+      :title="title"
+      left-text="返回"
+      left-arrow
+      @click-left="() => this.$router.back(-1)"
+    />
     <van-cell-group inset style="display: flex; align-items: center">
       <van-search v-model="search_kw" shape="round" placeholder="请输入搜索关键词" />
       <van-button round size="small">
@@ -17,13 +22,21 @@
         @load="onLoad"
       >
         <van-cell-group inset :key="operate.id" v-for="operate in operates">
-          <van-cell :value="operate.start_datetime | moment('from')" @click="evt => onClick(operate)" is-link>
+          <van-cell
+            :value="operate.start_datetime | moment('from')"
+            @click="(evt) => onClick(operate)"
+            is-link
+          >
             <template #title>
               <span class="custom-title">{{ operateTitle(operate) }}</span>
               <van-tag type="primary" mark>{{ operateState(operate) }}</van-tag>
             </template>
             <template #label>
-              <div class="van-ellipsis" :key="i" v-for="(f, i) in formatJson(operate.form_data_json)">
+              <div
+                class="van-ellipsis"
+                :key="i"
+                v-for="(f, i) in formatJson(operate, operate.form_data_json)"
+              >
                 {{ f.label }}:{{ f.val }}
               </div>
             </template>
@@ -34,17 +47,17 @@
   </div>
 </template>
 <script>
-import { formJsonFieldsFormat } from '@/utils/form_builder_util'
+import { formJsonFieldsFormat } from "@/utils/form_builder_util";
 import {
   QuerMyOperates,
   QuerMySubmitted,
-  QuerMyReceived
-} from '@/graphql/queries/query_workflow_info_node_instance_operates'
+  QuerMyReceived,
+} from "@/graphql/queries/query_workflow_info_node_instance_operates";
 export default {
-  name: 'WorkflowInfoNodeInstanceOperates',
+  name: "WorkflowInfoNodeInstanceOperates",
   components: {},
   props: {
-    queryType: { type: String, require: true }
+    queryType: { type: String, require: true },
   },
   apollo: {},
   data() {
@@ -52,115 +65,128 @@ export default {
       //待处理
       //已处理
       operates: [],
-      search_kw: '',
+      search_kw: "",
       finished: false,
       loading: false,
       refreshing: false,
       //分页
       page: 0,
-      rows: 15
-    }
+      rows: 15,
+    };
   },
   computed: {
     title: function () {
-      let ret = ''
+      let ret = "";
       switch (this.queryType) {
-        case 'myWaitting':
-          ret = '待处理的'
-          break
-        case 'myDone':
-          ret = '已处理的'
-          break
-        case 'mySubmitted':
-          ret = '我发起的'
-          break
-        case 'myReceived':
-          ret = '我收到的'
-          break
+        case "myWaitting":
+          ret = "待处理的";
+          break;
+        case "myDone":
+          ret = "已处理的";
+          break;
+        case "mySubmitted":
+          ret = "我发起的";
+          break;
+        case "myReceived":
+          ret = "我收到的";
+          break;
         default:
-          break
+          break;
       }
-      return ret
+      return ret;
     },
     offset: function () {
       if (this.page == 0) {
-        return 0
+        return 0;
       } else {
-        let offset = this.page * this.rows
-        return offset
+        let offset = this.page * this.rows;
+        return offset;
       }
     },
     limit: function () {
-      return this.rows || 15
-    }
+      return this.rows || 15;
+    },
   },
   created() {
-    this.doQuery()
+    this.doQuery();
   },
   mounted() {},
   methods: {
     onClick(wfi) {
-      if (this.queryType == 'myWaitting') {
-        this.$router.push({ name: 'AuditFormInfo', query: { workflowInfoNodeInstanceOperateId: wfi.operateId } })
+      if (this.queryType == "myWaitting") {
+        this.$router.push({
+          name: "AuditFormInfo",
+          query: { workflowInfoNodeInstanceOperateId: wfi.operateId },
+        });
       } else {
-        this.$router.push({ name: 'ShowFormInfo', query: { workflowInfoInstanceId: wfi.id } })
+        this.$router.push({
+          name: "ShowFormInfo",
+          query: { workflowInfoInstanceId: wfi.id },
+        });
       }
     },
     operateTitle(operate) {
-      return `${operate.starter.username}提交的${operate.workflow_info && operate.workflow_info.name}`
+      return `${operate.starter.username}提交的${
+        operate.workflow_info && operate.workflow_info.name
+      }`;
     },
     operateState(op) {
-      let stateDes = ''
-      let state = op.state
-      if (state === 'draft') stateDes = '待处理'
-      if (state === 'processing') stateDes = '处理中'
-      if (state === 'canceled') stateDes = '已撤销'
-      if (state === 'rejected') stateDes = '已拒绝'
-      return stateDes
+      let stateDes = "";
+      let state = op.state;
+      if (state === "draft") stateDes = "待处理";
+      if (state === "processing") stateDes = "处理中";
+      if (state === "canceled") stateDes = "已撤销";
+      if (state === "rejected") stateDes = "已拒绝";
+      return stateDes;
     },
-    formatJson(formJson) {
-      let jsonArray = formJsonFieldsFormat(formJson)
-      return jsonArray
+    formatJson(op, formJson) {
+      try {
+        let jsonArray = formJsonFieldsFormat(formJson);
+        return jsonArray;
+      } catch {
+        console.log(op.id);
+        console.log(formJson);
+      }
     },
     setResult(isFetchMore = false, newResult = []) {
       if (newResult.length > 0) {
-        this.loading = false
+        this.loading = false;
       } else {
-        this.finished = true
-        this.loading = false
+        this.finished = true;
+        this.loading = false;
       }
       if (isFetchMore) {
-        this.operates = [...this.operates, ...newResult]
+        this.operates = [...this.operates, ...newResult];
       } else {
-        this.operates = newResult
+        this.operates = newResult;
       }
     },
     doQuery(isFetchMore = false) {
-      let newResult = []
+      let newResult = [];
       switch (this.queryType) {
-        case 'myWaitting':
+        case "myWaitting":
           this.$apollo
             .query({
               query: QuerMyOperates,
               variables: {
                 offset: this.offset,
                 limit: this.limit,
-                states: ['draft'],
-                user_id: JSON.parse(localStorage.getItem('CURRENT_USER')).id
+                states: ["draft"],
+                user_id: JSON.parse(localStorage.getItem("CURRENT_USER")).id,
               },
-              fetchPolicy: 'network-only'
+              fetchPolicy: "network-only",
             })
-            .then(data => {
-              newResult = data.data.myOperates.map(op => {
-                let wfi = op.workflow_info_node_instance.workflow_info_instance
+            .then((data) => {
+              newResult = data.data.myOperates.map((op) => {
+                let wfi = op.workflow_info_node_instance.workflow_info_instance;
                 //待处理的数据,需要附加上operateId
-                wfi.operateId = op.id
-                return wfi
-              })
-              this.setResult(isFetchMore, newResult)
-            })
-          break
-        case 'myDone':
+                wfi.operateId = op.id;
+                return wfi;
+              });
+              this.setResult(isFetchMore, newResult);
+            });
+          break;
+        case "myDone":
           this.$apollo
             .query({
               query: QuerMyOperates,
@@ -168,18 +194,20 @@ export default {
                 offset: this.offset,
                 limit: this.limit,
 
-                states: ['done', 'rejected', 'forwarded'],
-                user_id: JSON.parse(localStorage.getItem('CURRENT_USER')).id
+                states: ["done", "rejected", "forwarded"],
+                user_id: JSON.parse(localStorage.getItem("CURRENT_USER")).id,
               },
-              fetchPolicy: 'network-only'
+              fetchPolicy: "network-only",
             })
-            .then(data => {
-              newResult = data.data.myOperates.map(op => op.workflow_info_node_instance.workflow_info_instance)
-              this.setResult(isFetchMore, newResult)
-            })
+            .then((data) => {
+              newResult = data.data.myOperates.map(
+                (op) => op.workflow_info_node_instance.workflow_info_instance
+              );
+              this.setResult(isFetchMore, newResult);
+            });
 
-          break
-        case 'mySubmitted':
+          break;
+        case "mySubmitted":
           this.$apollo
             .query({
               query: QuerMySubmitted,
@@ -187,56 +215,56 @@ export default {
                 offset: this.offset,
                 limit: this.limit,
 
-                states: ['done', 'rejected', 'draft', 'processing', 'canceled'],
-                starter_id: JSON.parse(localStorage.getItem('CURRENT_USER')).id
+                states: ["done", "rejected", "draft", "processing", "canceled"],
+                starter_id: JSON.parse(localStorage.getItem("CURRENT_USER")).id,
               },
-              fetchPolicy: 'network-only'
+              fetchPolicy: "network-only",
             })
-            .then(data => {
-              newResult = data.data.mySubmitted
-              this.setResult(isFetchMore, newResult)
-            })
+            .then((data) => {
+              newResult = data.data.mySubmitted;
+              this.setResult(isFetchMore, newResult);
+            });
 
-          break
+          break;
 
-        case 'myReceived':
+        case "myReceived":
           this.$apollo
             .query({
               query: QuerMyReceived,
               variables: {
                 offset: this.offset,
                 limit: this.limit,
-                states: ['draft'],
-                user_id: JSON.parse(localStorage.getItem('CURRENT_USER')).id
+                states: ["draft"],
+                user_id: JSON.parse(localStorage.getItem("CURRENT_USER")).id,
               },
-              fetchPolicy: 'network-only'
+              fetchPolicy: "network-only",
             })
-            .then(data => {
-              newResult = data.data.myReceived.map(op => {
-                let wfi = op.workflow_info_node_instance.workflow_info_instance
+            .then((data) => {
+              newResult = data.data.myReceived.map((op) => {
+                let wfi = op.workflow_info_node_instance.workflow_info_instance;
                 //待处理的数据,需要附加上operateId
-                wfi.operateId = op.id
-                return wfi
-              })
-              this.setResult(isFetchMore, newResult)
-            })
-          break
+                wfi.operateId = op.id;
+                return wfi;
+              });
+              this.setResult(isFetchMore, newResult);
+            });
+          break;
         default:
-          break
+          break;
       }
     },
     onLoad() {
-      this.page++
-      this.doQuery(true)
+      this.page++;
+      this.doQuery(true);
     },
     onRefresh() {
-      this.page = 0
-      this.doQuery()
-      this.refreshing = false
-      this.finished = false
-      this.loading = false
-    }
-  }
-}
+      this.page = 0;
+      this.doQuery();
+      this.refreshing = false;
+      this.finished = false;
+      this.loading = false;
+    },
+  },
+};
 </script>
 <style scoped></style>

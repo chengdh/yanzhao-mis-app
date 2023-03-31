@@ -5,3 +5,4 @@ services:
     working_dir: /app
     volumes:
        - ./cordova-android-app:/app
+      #  - ./android-app:/app
