@@ -143,7 +143,8 @@ export default {
       try {
         let jsonArray = formJsonFieldsFormat(formJson);
         return jsonArray;
-      } catch {
+      } catch(err) {
+        console.log(err)
         console.log(op.id);
         console.log(formJson);
       }

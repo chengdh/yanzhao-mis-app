@@ -26,3 +26,8 @@ export function formJsonFieldsFormat(jsonString, fieldCount = 3) {
   }
   return ret
 }
+export function replaceJsonControlChar(jsonString) {
+  let ret = jsonString.replace(/\n/g, '\\n')
+  ret = ret.replace(/\r/g, '\\r')
+  return ret
+}
