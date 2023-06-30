@@ -2,9 +2,9 @@
 export function formJsonFormat(jsonString, fieldNames = []) {
   jsonString = jsonString.replace(/\n/g, '\\n')
   jsonString = jsonString.replace(/\r/g, '\\r')
-  let jsonArray = JSON.parse(jsonString)
-  let ret = []
-  for (let field of Object.entries(jsonArray)) {
+  const jsonArray = JSON.parse(jsonString)
+  const ret = []
+  for (const field of Object.entries(jsonArray)) {
     if (fieldNames.includes(field.name)) ret.push(field)
   }
   return ret
@@ -14,18 +14,19 @@ export function formJsonFormat(jsonString, fieldNames = []) {
 export function formJsonFieldsFormat(jsonString, fieldCount = 3) {
   jsonString = jsonString.replace(/\n/g, '\\n')
   jsonString = jsonString.replace(/\r/g, '\\r')
-  let jsonArray = JSON.parse(jsonString)
-  let ret = []
+  const jsonArray = JSON.parse(jsonString)
+  const ret = []
   for (let i = 0; i < fieldCount; i++) {
-    let input = jsonArray[i]
+    const input = jsonArray[i]
     if (input.label && input.userData) {
-      let label = jsonArray[i].label
-      let val = jsonArray[i].userData[0]
+      const label = jsonArray[i].label
+      const val = jsonArray[i].userData[0]
       ret.push({ label, val })
     }
   }
   return ret
 }
+
 export function replaceJsonControlChar(jsonString) {
   let ret = jsonString.replace(/\n/g, '\\n')
   ret = ret.replace(/\r/g, '\\r')
