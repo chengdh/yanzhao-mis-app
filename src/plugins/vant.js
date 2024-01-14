@@ -22,11 +22,12 @@ import {
   Icon,
   TreeSelect,
   Popup,
+  Overlay,
+  Loading,
   Notify,
   Search,
   Divider,
   PullRefresh,
-  Loading,
   Tag
 } from 'vant'
 Vue.use(Button)
@@ -50,6 +51,7 @@ Vue.use(Button)
   .use(Icon)
   .use(TreeSelect)
   .use(Popup)
+  .use(Overlay)
   .use(Notify)
   .use(Search)
   .use(Divider)

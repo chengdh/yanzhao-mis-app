@@ -1,8 +1,9 @@
 import gql from 'graphql-tag'
 //待处理 $state='draft'
 //已处理 $state='done'
+// user_id: { _eq: $user_id }
 export const QuerMyOperates = gql`
-  query myOperates($user_id: bigint!, $states: [String!], $offset: Int! = 0, $limit: Int! = 15) {
+query myOperates($user_id: bigint!, $states: [String!], $offset: Int! = 0, $limit: Int! = 15) {
     myOperates: yws_workflow_info_node_instance_operates(
       where: {
         state: { _in: $states }

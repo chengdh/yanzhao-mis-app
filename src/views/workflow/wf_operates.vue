@@ -1,5 +1,10 @@
 <template>
   <div>
+    <van-overlay :show="processing">
+      <div class="wrapper">
+          <van-loading type="spinner" />
+      </div>
+    </van-overlay>
     <van-nav-bar
       :title="title"
       left-text="返回"
@@ -41,12 +46,42 @@
               </div>
             </template>
           </van-cell>
+          <van-cell title="审批" icon="certificate">
+            <!-- 使用 right-icon 插槽来自定义右侧图标 -->
+            <template #right-icon>
+              <van-button
+                type="primary"
+                round
+                size="small"
+                :disabled="processing"
+                @click="onAudit(operate.id)"
+              >
+                <van-icon name="success" />
+                通过
+              </van-button>
+              <van-button
+                type="danger"
+                round
+                size="small"
+                :disabled="processing"
+                @click="onReject(operate.id)"
+              >
+                <van-icon name="cross" />
+                拒绝
+              </van-button>
+            </template>
+          </van-cell>
         </van-cell-group>
       </van-list>
     </van-pull-refresh>
   </div>
 </template>
 <script>
+import { Toast, Notify } from "vant";
+import {
+  AuditWorkflowInfoNodeInstanceOperate,
+  RejectWorkflowInfoNodeInstanceOperate,
+} from "@/graphql/mutation/audit_workflow_info_instance";
 import { formJsonFieldsFormat } from "@/utils/form_builder_util";
 import {
   QuerMyOperates,
@@ -62,6 +97,7 @@ export default {
   apollo: {},
   data() {
     return {
+      processing: false,
       //待处理
       //已处理
       operates: [],
@@ -112,6 +148,36 @@ export default {
   },
   mounted() {},
   methods: {
+    //审批通过
+    onAudit(wfOperateId) {
+      this.processing = true;
+      this.$apollo
+        .mutate({
+          mutation: AuditWorkflowInfoNodeInstanceOperate,
+          variables: { id: parseInt(wfOperateId), note: "直接审批通过!" },
+        })
+      Promise.resolve({}).then((data) => {
+        this.processing = false
+        this.onRefresh();
+        Notify({ type: "success", message: `审批通过!` });
+      });
+    },
+
+    //审批拒绝
+    onReject(wfOperateId) {
+      this.processing = true
+      this.$apollo
+        .mutate({
+          mutation: RejectWorkflowInfoNodeInstanceOperate,
+          variables: { id: parseInt(wfOperateId), note: "直接审批退回!" },
+        })
+
+      Promise.resolve({}).then((data) => {
+        this.processing = false
+        this.onRefresh();
+        Notify({ type: "success", message: `已拒绝!` });
+      });
+    },
     onClick(wfi) {
       if (this.queryType == "myWaitting") {
         this.$router.push({
@@ -143,8 +209,8 @@ export default {
       try {
         let jsonArray = formJsonFieldsFormat(formJson);
         return jsonArray;
-      } catch(err) {
-        console.log(err)
+      } catch (err) {
+        console.log(err);
         console.log(op.id);
         console.log(formJson);
       }
@@ -268,4 +334,17 @@ export default {
   },
 };
 </script>
-<style scoped></style>
+<style scoped>
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.block {
+  width: 120px;
+  height: 120px;
+  background-color: #fff;
+}
+</style>
