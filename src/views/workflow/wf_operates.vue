@@ -46,7 +46,7 @@
               </div>
             </template>
           </van-cell>
-          <van-cell title="审批" icon="certificate">
+          <van-cell title="审批" icon="certificate" v-if="queryType === 'myWaitting'">
             <!-- 使用 right-icon 插槽来自定义右侧图标 -->
             <template #right-icon>
               <van-button
