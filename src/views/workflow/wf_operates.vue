@@ -2,7 +2,7 @@
   <div>
     <van-overlay :show="processing">
       <div class="wrapper">
-          <van-loading type="spinner" />
+        <van-loading type="spinner" />
       </div>
     </van-overlay>
     <van-nav-bar
@@ -54,7 +54,7 @@
                 round
                 size="small"
                 :disabled="processing"
-                @click="onAudit(operate.id)"
+                @click="onAudit(operate.operateId)"
               >
                 <van-icon name="success" />
                 通过
@@ -64,7 +64,7 @@
                 round
                 size="small"
                 :disabled="processing"
-                @click="onReject(operate.id)"
+                @click="onReject(operate.operateId)"
               >
                 <van-icon name="cross" />
                 拒绝
@@ -156,27 +156,27 @@ export default {
           mutation: AuditWorkflowInfoNodeInstanceOperate,
           variables: { id: parseInt(wfOperateId), note: "直接审批通过!" },
         })
-      Promise.resolve({}).then((data) => {
-        this.processing = false
-        this.onRefresh();
-        Notify({ type: "success", message: `审批通过!` });
-      });
+        .then((data) => {
+          this.processing = false;
+          this.onRefresh();
+          Notify({ type: "success", message: `审批通过!` });
+        });
     },
 
     //审批拒绝
     onReject(wfOperateId) {
-      this.processing = true
+      console.log(wfOperateId)
+      this.processing = true;
       this.$apollo
         .mutate({
           mutation: RejectWorkflowInfoNodeInstanceOperate,
           variables: { id: parseInt(wfOperateId), note: "直接审批退回!" },
         })
-
-      Promise.resolve({}).then((data) => {
-        this.processing = false
-        this.onRefresh();
-        Notify({ type: "success", message: `已拒绝!` });
-      });
+        .then((data) => {
+          this.processing = false;
+          this.onRefresh();
+          Notify({ type: "success", message: `已拒绝!` });
+        });
     },
     onClick(wfi) {
       if (this.queryType == "myWaitting") {
