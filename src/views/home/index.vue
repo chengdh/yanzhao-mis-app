@@ -25,10 +25,10 @@
         />
       </van-grid>
     </van-cell-group>
-    <van-cell-group inset :key="cat.id" v-for="cat in nonBlankFormCategories" :title="cat.name">
+    <van-cell-group inset :key="cat.id" v-for="cat in nonBlankFormCategories.filter(c => c.is_active)" :title="cat.name">
       <van-grid column-num="3">
         <van-grid-item
-          v-for="formInfo in cat.form_infos"
+          v-for="formInfo in cat.form_infos.filter(f => f.is_active)"
           :key="formInfo.id"
           @click="startFormInfo(formInfo)"
           icon="photo-o"
@@ -54,10 +54,12 @@ export default {
           formCategories: yws_form_categories {
             name
             id
+            is_active
             form_infos {
               name
               id
               note
+              is_active
               form_info_design {
                 form_json
                 id

@@ -13,7 +13,7 @@ query myOperates($user_id: bigint!, $states: [String!], $offset: Int! = 0, $limi
           workflow_info_node: { node_type: { _nin: ["start", "end", "condition", "copy_to"] } }
         }
       }
-      order_by: { created_at: desc }
+      order_by: { created_at: asc}
       offset: $offset
       limit: $limit
     ) {
@@ -88,7 +88,7 @@ export const QuerMyReceived = gql`
         user_id: { _eq: $user_id }
         workflow_info_node_instance: { workflow_info_node: { node_type: { _in: ["copy_to"] } } }
       }
-      order_by: { created_at: desc }
+      order_by: { created_at: asc}
       offset: $offset
       limit: $limit
     ) {
